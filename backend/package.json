@@ -1,0 +1,31 @@
+{
+  "name": "barcabinet-backend",
+  "version": "0.0.1",
+  "description": "Node Server for the barcabinet backend",
+  "main": "server.js",
+  "author": "Simon Tenggren",
+  "license": "ISC",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx dist/server.js",
+    "build": "npx tsc",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
+    "clean": "rm -rf dist/",
+    "lint": "yarn eslint ."
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.9",
+    "@typescript-eslint/parser": "^5.59.9",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.42.0",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.1.3"
+  }
+}
