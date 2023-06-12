@@ -10,11 +10,12 @@
   "scripts": {
     "start": "npx dist/server.js",
     "build": "tsc",
+    "build-test": "tsc --p tsconfig-acceptance.json",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
     "clean": "rm -rf dist/",
     "lint": "eslint .",
-    "accept": "tsc --p tsconfig-acceptance.json && cucumber-js --import ./dist/acceptance/step-definitions/ acceptance/features/",
-    "unit": "mocha ./dist/test/"
+    "accept": "yarn build-test && cucumber-js --import ./dist/acceptance/step-definitions/ acceptance/features/",
+    "unit": "yarn build-test && mocha ./dist/test/"
   },
   "dependencies": {
     "body-parser": "^1.20.2",

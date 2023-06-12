@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-      "./acceptance/step-definitions/**/*"
+      "./acceptance/step-definitions/**/*",
+      "./test/**/*"
     ]
 }
