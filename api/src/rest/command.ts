@@ -1,8 +1,10 @@
-import type { Request, Response } from 'express'
+import type { Request } from 'express'
 
-export interface Command<ProcessedRequestData>{
+export interface Command<ProcessedRequestData, CommandData>{
   method: 'post' | 'put'
   route: string
+  statusCode: number
   processInput: (req: Request) => ProcessedRequestData
-  runCommand: (response: Response, processedData: ProcessedRequestData) => Response
+  runCommand: (processedData: ProcessedRequestData) => CommandData
 }
+
