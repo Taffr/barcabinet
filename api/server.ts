@@ -1,25 +1,14 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express } from 'express'
 import bodyParser from 'body-parser'
-import type { Command } from './src/rest/command.js'
 import { registerCommand } from './src/rest/register-command.js'
-
-const testCommand: Command<string> = {
-  method: 'post',
-  route: '/ping',
-  processInput: (req: Request) => {
-    const { body } = req
-    return 'PONG: You sent: ' + JSON.stringify(body)
-  },
-  runCommand: (res: Response, processed: string) => res.send(processed)
-}
-
+import { CommandPing } from './src/commands/command-ping.js'
 
 const app: Express = express()
 const port = process.env.port || 3000
 
 app.use(bodyParser.json())
 
-const registered = registerCommand(app, testCommand)
+const registered = registerCommand(app, CommandPing)
 
 registered.listen(port, () => {
   console.log('Started Server...')

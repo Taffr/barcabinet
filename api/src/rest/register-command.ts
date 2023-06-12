@@ -1,18 +1,10 @@
-import type { Express, Request, Response } from 'express'
-import type { Command } from './command.js'
+import type { Express } from 'express'
+import { Command } from './command.js'
+import { executeCommand } from './execute-command.js'
 
-const registerCommand = (app: Express, command: Command<any>) => {
-  const {
-    method,
-    route,
-    processInput,
-    runCommand,
-  } = command
-
-  app[method](route, (req: Request, res: Response) => {
-    const processed = processInput(req)
-    return runCommand(res, processed)
-  })
+const registerCommand = (app: Express, command: Command<any, any>) => {
+  const { method, route } = command
+  app[method](route, executeCommand(command))
   return app
 }
 
