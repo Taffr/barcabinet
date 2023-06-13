@@ -11,6 +11,6 @@ export function executeCommand<A, B>(command: Command<A, B>) {
   return (req: Request, res: Response) => {
     const processed = processInput(req)
     const result = runCommand(processed)
-    return res.status(statusCode).send(result)
+    return res.status(statusCode).json(result)
   }
 }

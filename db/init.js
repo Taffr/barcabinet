@@ -4,9 +4,11 @@ const ingredientsIndex = {
   'ingredients.name': 1,
 }
 
-db = db.getSiblingDB('barcabinet')
+const cocktailFileRaw = fs.readFileSync('/docker-entrypoint-initdb.d/cocktails.json', 'utf-8')
+const cocktails = JSON.parse(cocktailFileRaw)
+
+const db = db.getSiblingDB('barcabinet')
 db.createCollection('recipes')
 db.recipes.createIndex(ingredientsIndex)
-
-load('/docker-entrypoint-initdb.d/cocktails.json')
+db.recipes.insertMany(cocktails)
 
