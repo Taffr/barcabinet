@@ -1,0 +1,17 @@
+{
+  "name": "db",
+  "version": "0.0.1",
+  "description": "scraper, data, and containerization for database(s)",
+  "main": "scraper.js",
+  "author": "Simon Tenggren",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "scrape": "npx scraper.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
