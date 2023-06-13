@@ -1,5 +1,6 @@
 const ingredientsIndex = {
   'name': 1,
+  'ingredients.id': 1,
   'ingredients.name': 1,
 }
 
