@@ -8,4 +8,4 @@ const queryGetAllIngredients: Query<any, Ingredient[]> = {
   runQuery: getAllIngredients,
 }
 
-export { queryGetAllIngredients }
+export default queryGetAllIngredients

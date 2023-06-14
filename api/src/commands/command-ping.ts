@@ -1,7 +1,7 @@
 import { Command } from '../rest/command.js'
 import { Request } from 'express'
 
-export const commandPing: Command<string, string> = {
+const commandPing: Command<string, string> = {
   method: 'post',
   route: '/ping',
   statusCode: 200,
@@ -11,3 +11,5 @@ export const commandPing: Command<string, string> = {
   },
   runCommand: (processed: string) => 'PONG: You sent ' + processed
 }
+
+export default commandPing
