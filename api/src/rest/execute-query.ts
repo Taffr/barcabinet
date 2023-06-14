@@ -9,13 +9,13 @@ export function executeQuery<A,B>(query: Query<A,B>) {
     runQuery,
   } = query
 
-  return (req: Request, res: Response) => {
+  return async (req: Request, res: Response) => {
     if (!isNil(processParams)) {
-      const params = processParams(req)
-      const result = runQuery(params)
+      const params = await processParams(req)
+      const result = await runQuery(params)
       return res.status(statusCode).json(result)
     } else {
-      return res.status(statusCode).json(runQuery)
+      return res.status(statusCode).json(await runQuery())
     }
   }
 }

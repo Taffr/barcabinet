@@ -2,8 +2,9 @@ Feature: Get Ingredients
 
   Scenario: List all ingredients
     When I get all ingredients
-    Then I get a non-empty answer
+    Then the following ingredients are included in the result
+      | name    |
+      | Whiskey | 
+      | Vodka   |
+      | Gin     |
 
-  Scenario: List all ingredients
-    When I get all ingredients
-    Then I get a non-empty answer
