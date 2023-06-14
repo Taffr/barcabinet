@@ -1,9 +1,10 @@
-import { DataTable, When, Then } from '@cucumber/cucumber'
+import { DataTable, When, Then, setWorldConstructor } from '@cucumber/cucumber'
 import { TestWorld } from '../support/test-world.js'
-import { queryGetAllIngredients } from '../../src/queries/ingredients/query-get-all-ingredients.js'
+import queryGetAllIngredients from '../../src/queries/ingredients/query-get-all-ingredients.js'
 import { Ingredient } from '../../src/types/ingredient.js'
 import { assert } from 'chai'
 import { pluck, forEach } from 'ramda'
+setWorldConstructor(TestWorld)
 
 When('I get all ingredients', function(this: TestWorld) {
   return this.runQuery(queryGetAllIngredients, {})
