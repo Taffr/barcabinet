@@ -1,12 +1,9 @@
-import { After, DataTable, When, Then, setWorldConstructor } from '@cucumber/cucumber'
+import { DataTable, When, Then } from '@cucumber/cucumber'
 import { TestWorld } from '../support/test-world.js'
 import { queryGetAllIngredients } from '../../src/queries/ingredients/query-get-all-ingredients.js'
 import { Ingredient } from '../../src/types/ingredient.js'
 import { assert } from 'chai'
-import { MongoConnection } from '../../src/db/mongo-connection.js'
 import { pluck, forEach } from 'ramda'
-
-setWorldConstructor(TestWorld)
 
 When('I get all ingredients', function(this: TestWorld) {
   return this.runQuery(queryGetAllIngredients, {})
@@ -23,4 +20,3 @@ Then('the following ingredients are included in the result', async function (thi
   forEach((n: string) => assert.isTrue(actualNames.has(n), `Result did not contain ${n}`), expectedIngredientNames)
 })
 
-After(async () => await MongoConnection.getInstance().disconnect())

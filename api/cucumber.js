@@ -1,3 +1,4 @@
 export default {
-  publishQuiet: true
+  publishQuiet: true,
+  import: [ './dist/acceptance/support/hooks.js' ]
 }
