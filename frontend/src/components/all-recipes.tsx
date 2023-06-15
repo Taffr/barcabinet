@@ -39,25 +39,25 @@ export function AllRecipes () {
 
   useEffect(() => {
     fetch('http://localhost:3000/recipes')
-      .then((r: Response) => r.json())
-      .then((json) => setRecipes(json))
-      .catch((e) => {
-          console.error(e)
-      })
+      .then((r) => r.json())
+      .then(setRecipes)
+      .catch(console.error)
   }, [])
   
   return (
     <Stack spacing={ 5 }>
-      <Typography variant="h1">
-        Recipes
-      </Typography>
       {
         recipes.length === 0 && <LinearProgress color="inherit"/>
       }
       { recipes.length !== 0 && (
-        <Stack spacing={ 2 } >
-          { map(RecipeListItem, recipes) }
-        </Stack>
+        <>
+          <Typography variant="h1">
+            Recipes
+          </Typography>
+          <Stack spacing={ 2 } >
+            { map(RecipeListItem, recipes) }
+          </Stack>
+        </>
       )}
     </Stack>
   )
