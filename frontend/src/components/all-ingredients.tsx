@@ -11,7 +11,7 @@ import {
 
 const IngredientGridItem = (i: { name: string, id: number } ) => (
   <Grid item>
-    <Chip label={`${ i.name } : ${i.id }`} />
+    <Chip label={ i.name } />
   </Grid> 
 )
 
