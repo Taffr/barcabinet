@@ -2,13 +2,15 @@ import { registerCommand } from './register-command.js'
 import type { Express } from 'express'
 import { compose, map, reduce, replace } from 'ramda'
 import bluebird from 'bluebird'
-import { glob } from 'glob'
+
+const allFilePaths = [
+  '../commands/command-ping.js',
+] as const
 
 const formatToRelativeJsImport =
   compose(replace('.ts', '.js'), replace('src/', '../'))
 
-const commandFiles = await glob('./src/**/command-*.ts')
-const formatted = map(formatToRelativeJsImport, commandFiles)
+const formatted = map(formatToRelativeJsImport, allFilePaths)
 const allQueries = await bluebird.map(formatted, async (path) => {
   return (await import(path)).default
 })
