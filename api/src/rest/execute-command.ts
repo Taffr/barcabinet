@@ -1,7 +1,7 @@
 import { Command } from './command.js'
 import { Request, Response } from 'express'
 
-export function executeCommand<A, B>(command: Command<A, B>) {
+export function executeCommand<A, B> (command: Command<A, B>) {
   const {
     statusCode,
     processInput,

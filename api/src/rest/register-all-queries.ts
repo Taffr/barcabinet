@@ -17,5 +17,6 @@ const allQueries = await bluebird.map(formatted, async (path) => {
   return (await import(path)).default
 })
 
-export const registerAllQueries = (app: Express) => reduce(registerQuery, app, allQueries) 
+export const registerAllQueries =
+  (app: Express) => reduce(registerQuery, app, allQueries)
 

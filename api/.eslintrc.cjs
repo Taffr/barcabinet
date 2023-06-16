@@ -1,12 +1,29 @@
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended' ],
-  parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
+  env: { browser: false, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
-  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   rules: {
-    "@typescript-eslint/no-explicit-any": "off",
-    "indent": ["error", 2]
+    'no-extra-semi': 'error',
+    'semi': [ 'error', 'never' ],
+    'no-await-in-loop': 'error',
+    'no-confusing-arrow': 'error',
+    'prefer-template': 'error',
+    'sort-imports': [ 'error', { 'ignoreDeclarationSort': true} ],
+    'object-shorthand': [ 'error', 'always' ],
+    'no-magic-numbers':  [ 'error', { 'ignore': [ 0 ] } ],
+    'no-return-assign': 'error',
+    'no-var': 'error',
+    'prefer-destructuring': 'error',
+    'prefer-const': 'error',
+    'arrow-parens': 'error',
+    'max-len': [ 'error', { 'code': 80 } ],
+    'no-extra-parens': 'error',
+    'no-trailing-spaces': 'error',
+    'quotes': [ 'error', 'single'],
+    'space-before-function-paren': 'error',
   },
 }

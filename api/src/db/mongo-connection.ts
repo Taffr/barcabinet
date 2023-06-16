@@ -24,11 +24,11 @@ export class MongoConnection {
     this.client = new ClientManager(this.dbUrl)
   }
 
-  static getInstance() {
+  static getInstance () {
     if (!this.instance) {
       this.instance = new MongoConnection()
     }
-    return this.instance  
+    return this.instance
   }
 
   getCollection (collectionName: string) {
