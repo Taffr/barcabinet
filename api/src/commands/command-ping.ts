@@ -9,7 +9,7 @@ const commandPing: Command<string, string> = {
     const { body } = req
     return body.ping
   },
-  runCommand: (processed: string) => 'PONG: You sent ' + processed
+  runCommand: (processed: string) => `PONG: You sent ${  processed}`
 }
 
 export default commandPing

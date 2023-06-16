@@ -4,8 +4,11 @@ import cors from 'cors'
 import { registerAllQueries } from './src/rest/register-all-queries.js'
 import { registerAllCommands } from './src/rest/register-all-commands.js'
 import { compose } from 'ramda'
+
+const DEFAULT_PORT = 3000
+
 const app: Express = express()
-const port = process.env.port || 3000
+const port = process.env.port || DEFAULT_PORT
 
 app.use(cors())
 app.use(bodyParser.json())

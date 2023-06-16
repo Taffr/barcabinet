@@ -2,7 +2,7 @@ import { Query } from './query.js'
 import { Request, Response } from 'express'
 import { isNil } from 'ramda'
 
-export function executeQuery<A,B>(query: Query<A,B>) {
+export function executeQuery<A,B> (query: Query<A,B>) {
   const {
     statusCode,
     processParams,

@@ -1,6 +1,7 @@
 import { assert } from 'chai'
 import { factory } from '../../../src/lib/ingredients/getAllIngredients.js'
-import { RecipeCollection } from '../../../src/db/collections/recipe-collection.js'
+import { RecipeCollection }
+  from '../../../src/db/collections/recipe-collection.js'
 import { Ingredient } from '../../../src/types/ingredient.js'
 import { ObjectId } from 'mongodb'
 
@@ -23,7 +24,7 @@ describe('getAllIngredients', () => {
             { id: 1, name: 'Vodka' },
             { id: 2, name: 'Gin' },
           ]
-        }, 
+        },
         {
           _id: new ObjectId(),
           name: 'bar',

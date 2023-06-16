@@ -1,4 +1,4 @@
-import { World, IWorldOptions } from '@cucumber/cucumber'
+import { IWorldOptions, World } from '@cucumber/cucumber'
 import { Request, Response } from 'express'
 import { executeCommand } from '../../src/rest/execute-command.js'
 import { executeQuery } from '../../src/rest/execute-query.js'
@@ -10,11 +10,11 @@ class ResponseSpy {
   result: unknown | null = null
 
   status (code: number) {
-    this.returnCode = code;
-    return this 
+    this.returnCode = code
+    return this
   }
 
-  json (res: any) {
+  json (res: unknown) {
     this.result = res
     return this
   }
@@ -22,19 +22,25 @@ class ResponseSpy {
 
 export class TestWorld extends World {
   responseSpy: ResponseSpy
-  constructor (opts: IWorldOptions<any>) {
+  constructor (opts: IWorldOptions<unknown>) {
     super(opts)
     this.responseSpy = new ResponseSpy()
   }
 
-  runCommand (command: Command<any, any>, data: any) {
-    return executeCommand(command)({ body: data } as Request, this.responseSpy as unknown as Response)
+  runCommand (command: Command<unknown, unknown>, data: unknown) {
+    return executeCommand(command)(
+      { body: data } as Request,
+      this.responseSpy as unknown as Response
+    )
   }
 
-  runQuery (query: Query<any, any>, params: any) {
-    return executeQuery(query)({ params: params } as Request, this.responseSpy as unknown as Response)
+  runQuery (query: Query<unknown, unknown>, params: unknown) {
+    return executeQuery(query)(
+      { params } as Request,
+      this.responseSpy as unknown as Response
+    )
   }
-  
+
   result () {
     return this.responseSpy.result
   }
