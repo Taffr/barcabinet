@@ -1,8 +1,9 @@
+import { Stack } from '@mui/material'
 import { useRouteError } from 'react-router-dom'
-import Stack from '@mui/material/Stack'
 
+type RouteError = { status: number, statusText?: string, message?: string }
 export function ErrorPage () {
-  const error = useRouteError() as { status: number, statusText?: string, message?: string }
+  const error = useRouteError() as RouteError
   return (
     <div id="error-page">
       <Stack spacing={2}>

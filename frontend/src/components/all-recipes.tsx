@@ -1,21 +1,32 @@
-import { useState, useEffect } from 'react'
-import { map } from 'ramda'
-import { 
+import {
   Card,
-  LinearProgress,
   Chip,
   Divider,
+  LinearProgress,
   Stack,
   Typography,
 } from '@mui/material'
+import {
+  useEffect,
+  useState
+} from 'react'
+import { map } from 'ramda'
 
-const RecipeListItem = (recipe: { _id: string, name: string, preparation: string, ingredients: { name: string, id: number }[] }) => {
+type Ingredient = { name: string, id: number }
+type Recipe = {
+  _id: string,
+  name: string,
+  preparation: string,
+  ingredients: Ingredient[],
+}
+
+const RecipeListItem = (recipe: Recipe) => {
   const { name, ingredients, preparation } = recipe
   return (
     <Card variant="outlined">
       <Stack spacing={2} m={2}>
         <Typography variant="h2" >
-          { name } 
+          { name }
         </Typography>
         <Divider />
         <Typography>
@@ -27,7 +38,10 @@ const RecipeListItem = (recipe: { _id: string, name: string, preparation: string
           justifyContent="center"
           spacing={ 2 }
         >
-          { map(({ name }) => <Chip label={ name } variant="outlined" />, ingredients)}
+    { map(({ name }) =>
+      <Chip label={ name } variant="outlined" />
+      , ingredients)
+    }
         </Stack>
       </Stack>
     </Card>
@@ -43,13 +57,13 @@ export function AllRecipes () {
       .then(setRecipes)
       .catch(console.error)
   }, [])
-  
+
   return (
     <Stack spacing={ 5 }>
       {
         recipes.length === 0 && <LinearProgress color="inherit"/>
       }
-      { recipes.length !== 0 && (
+      { recipes.length !== 0 &&
         <>
           <Typography variant="h1">
             Recipes
@@ -58,7 +72,7 @@ export function AllRecipes () {
             { map(RecipeListItem, recipes) }
           </Stack>
         </>
-      )}
+      }
     </Stack>
   )
 }

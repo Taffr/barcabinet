@@ -1,14 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import './index.css'
+import {
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom'
+import { AllIngredients } from './components/all-ingredients.tsx'
+import { AllRecipes } from './components/all-recipes.tsx'
 import App from './App.tsx'
 import { ErrorPage } from './error-page.tsx'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom'
-import './index.css'
-import { AllRecipes } from './components/all-recipes.tsx'
-import { AllIngredients } from './components/all-ingredients.tsx'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 
 const router = createBrowserRouter([
   {
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       }
     ]
   },
-  
+
 ])
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
