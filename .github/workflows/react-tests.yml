@@ -1,4 +1,4 @@
-name: NodeJS API CI
+name: React Webapp CI
 
 on: [push]
 
@@ -16,9 +16,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Build and run containers
-      run: docker-compose -f "docker-compose.yml" up -d --build
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -26,20 +23,9 @@ jobs:
 
     - name: Install Dependencies
       run: yarn
-      working-directory: api
+      working-directory: frontend
 
     - name: Run Linter
       run: yarn lint
-      working-directory: api
+      working-directory: frontend
 
-    - name: Run unit tests
-      run: yarn unit
-      working-directory: api
-
-    - name: Run acceptance tests
-      run: yarn accept
-      working-directory: api
-
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.yml" down
