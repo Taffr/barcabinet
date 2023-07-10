@@ -21,7 +21,7 @@ export function AllIngredients () {
  const [ ingredients, setIngredients ] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3000/ingredients')
+    fetch('http://localhost:3000/recipes/ingredients')
       .then((r) => r.json())
       .then(setIngredients)
       .catch(console.error)

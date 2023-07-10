@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { RecipeController } from './recipe.controller';
-import { RecipeStore } from './recipestore.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RecipeModule } from './recipes/recipe.module';
 
 @Module({
-  imports: [],
-  controllers: [RecipeController],
-  providers: [RecipeStore],
+  imports: [
+    RecipeModule,
+    MongooseModule.forRoot('mongodb://localhost:27017/barcabinet'),
+  ],
 })
 export class AppModule {}
