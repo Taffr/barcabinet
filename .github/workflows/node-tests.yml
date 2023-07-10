@@ -32,12 +32,8 @@ jobs:
       run: yarn lint
       working-directory: api
 
-    - name: Run unit tests
-      run: yarn unit
-      working-directory: api
-
-    - name: Run acceptance tests
-      run: yarn accept
+    - name: Run Unit Tests
+      run: yarn test 
       working-directory: api
 
     - name: Stop containers
