@@ -4,7 +4,6 @@ import { RecipeStore } from './recipestore.service';
 
 describe('RecipeController', () => {
   let recipeController: RecipeController;
-
   const mockRecipeStore = {
     getAll() {
       return [
