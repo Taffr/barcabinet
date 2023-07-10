@@ -4,21 +4,22 @@ import { RecipeStore } from './recipestore.service';
 
 describe('RecipeController', () => {
   let recipeController: RecipeController;
+
   const mockRecipeStore = {
     getAll() {
-      return [
+      return Promise.resolve([
         {
           name: 'A Cocktail',
         },
-      ];
+      ]);
     },
     containingIngredient(ingredientId: number) {
-      return [
+      return Promise.resolve([
         {
           name: 'Another Cocktail',
           ingredients: [{ id: ingredientId }],
         },
-      ];
+      ]);
     },
   };
 
@@ -37,18 +38,16 @@ describe('RecipeController', () => {
   });
 
   describe('getAll()', () => {
-    it('should return all recipes', () => {
-      expect(recipeController.getAll().length).toBeGreaterThan(0);
+    it('should return all recipes', async () => {
+      const res = await recipeController.getAll();
+      expect(res.length).toBeGreaterThan(0);
     });
   });
 
-  describe('containingIngredient()', () => {
-    it('should return a recipe when asking for an ingredient', () => {
-      expect(
-        recipeController
-          .containingIngredient('0')[0]
-          .ingredients.some(({ id }) => id === 0),
-      ).toBe(true);
+  describe('containingIngredient(id)', () => {
+    it('should return a recipe when asking for an ingredient', async () => {
+      const res = await recipeController.containingIngredient('0');
+      expect(res[0].ingredients.some(({ id }) => id === 0)).toBe(true);
     });
   });
 });
