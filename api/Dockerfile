@@ -26,6 +26,10 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json /app/yarn.lock ./
 
+# Copy Secrets and Env vars
+COPY .secrets/ .secrets/
+COPY .env.prod .env.prod
+
 # Install only production dependencies using yarn
 RUN yarn install --production
 
