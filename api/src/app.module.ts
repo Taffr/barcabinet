@@ -1,11 +1,22 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RecipeModule } from './recipes/recipe.module';
+import { FirestoreModule } from './firestore/firestore.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.prod', '.env.dev'],
+      isGlobal: true,
+    }),
+    FirestoreModule.forRoot({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        keyFileName: configService.get<string>('SA_KEY'),
+      }),
+      inject: [ConfigService],
+    }),
     RecipeModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/barcabinet'),
   ],
 })
 export class AppModule {}
