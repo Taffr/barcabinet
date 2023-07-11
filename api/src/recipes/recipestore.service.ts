@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Recipe } from '../schemas/recipe.schema';
+import { Injectable, Inject } from '@nestjs/common';
+import { Recipe } from './documents/recipe.document';
+import { CollectionReference } from '@google-cloud/firestore';
 
 @Injectable()
 export class RecipeStore {
-  constructor(@InjectModel(Recipe.name) private recipeModel: Model<Recipe>) {}
+  constructor(
+    @Inject(Recipe.collectionName)
+    private recipeCollection: CollectionReference<Recipe>,
+  ) {}
 
-  async getAll() {
-    return this.recipeModel.find().exec();
+  async getAll(): Promise<Recipe[]> {
+    const snapshot = await this.recipeCollection.get();
+    return snapshot.docs.map((doc) => doc.data());
   }
 
-  async containingIngredient(ingredientId: number) {
-    const allRecipes = await this.recipeModel.find().exec();
-    const containingIngredient = allRecipes.filter(({ ingredients }) =>
-      ingredients.some(({ id }) => id === ingredientId),
+  async containingIngredient(ingredientId: number): Promise<Recipe[]> {
+    const allRecipes = await this.getAll();
+    return allRecipes.filter(({ ingredients }) =>
+      ingredients.some(({ id }) => ingredientId === id),
     );
-    return containingIngredient;
   }
 }
