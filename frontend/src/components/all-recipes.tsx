@@ -52,7 +52,7 @@ export function AllRecipes () {
   const [ recipes, setRecipes ] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3000/recipes')
+    fetch(`${import.meta.env.VITE_BARCABINET_API_URL}/recipes`)
       .then((r) => r.json())
       .then(setRecipes)
       .catch(console.error)
