@@ -35,10 +35,11 @@ const RouterButton = ({ name, link }: { name: string, link: string }) =>
   </Button>
 
 
-const routes = [
-  { name: 'Recipes', link: '/recipes' },
-  { name: 'Ingredients', link: '/ingredients' },
-]
+  const routes = [
+    { name: 'Home', link: '/' },
+    { name: 'Recipes', link: '/recipes' },
+    { name: 'Ingredients', link: '/ingredients' },
+  ]
 
 const BarCabinet = () => {
   const theme = useTheme()
