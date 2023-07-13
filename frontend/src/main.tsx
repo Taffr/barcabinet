@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom'
 import { AllIngredients } from './components/all-ingredients.tsx'
 import { AllRecipes } from './components/all-recipes.tsx'
+import { Home } from './components/home.tsx'
 import App from './App.tsx'
 import { ErrorPage } from './error-page.tsx'
 import React from 'react'
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/ingredients',
         element: <AllIngredients />
+      },
+      {
+        path: '/',
+        element: <Home />
       }
     ]
   },
