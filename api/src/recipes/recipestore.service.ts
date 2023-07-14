@@ -9,6 +9,11 @@ export class RecipeStore {
     private recipeCollection: CollectionReference<Recipe>,
   ) {}
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  async addRecipe(r: Recipe) {
+    throw new Error('Not implemented!');
+  }
+
   async getAll(): Promise<Recipe[]> {
     const snapshot = await this.recipeCollection.get();
     return snapshot.docs.map((doc) => doc.data());
