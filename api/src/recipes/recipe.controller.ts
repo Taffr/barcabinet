@@ -20,6 +20,14 @@ export class RecipeController {
   async allIngredients(): Promise<Ingredient[]> {
     const allRecipes = await this.recipeStore.getAll();
     const allIngredients = allRecipes.flatMap(({ ingredients }) => ingredients);
-    return [...new Set(allIngredients)];
+    const idSet = new Set<number>();
+    const uniqueIngredients = allIngredients.filter(({ id }) => {
+      if (idSet.has(id)) {
+        return false;
+      }
+      idSet.add(id);
+      return true;
+    });
+    return uniqueIngredients;
   }
 }
