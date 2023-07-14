@@ -17,7 +17,8 @@ Given(
         .map((rawIngredient) => {
           const [idPart, namePart] = rawIngredient.split(', ');
           const id = Number(idPart.match(/\d+/)[0]);
-          return { id, name: namePart };
+          const name = namePart.match(/[A-z-åäö+\s*]+/)[0];
+          return { id, name };
         });
 
       const recipe: Recipe = {
@@ -37,8 +38,25 @@ When('I GET {string}', async function (this: AcceptanceWorld, route: string) {
   await this.handleResponse(request(this.app.getHttpServer()).get(route));
 });
 
-Then('I get recipes with the following names', function (dataTable: DataTable) {
-  const expectedNames = dataTable.hashes().map((h) => h.name);
-  const resultNames = this.response.body.map(({ name }) => name);
-  assert.deepEqual(expectedNames, resultNames);
-});
+Then(
+  'I get recipes with the following names',
+  function (this: AcceptanceWorld, dataTable: DataTable) {
+    const expectedNames = dataTable.hashes().map((h) => h.name);
+    const resultNames = this.response.body.map(({ name }) => name);
+    assert.deepEqual(expectedNames, resultNames);
+  },
+);
+
+Then(
+  'I get the following ingredients',
+  function (this: AcceptanceWorld, dataTable: DataTable) {
+    const expectedIngredients: Ingredient[] = dataTable
+      .hashes()
+      .map((ingRaw) => {
+        return { id: Number(ingRaw.id), name: ingRaw.name };
+      });
+
+    const resultIngredients = this.response.body;
+    assert.deepEqual(expectedIngredients, resultIngredients);
+  },
+);
