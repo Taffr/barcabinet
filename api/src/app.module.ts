@@ -5,6 +5,7 @@ import { FirestoreModule } from './firestore/firestore.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app/app.controller';
+import { CryptoModule } from './crypto/crypto.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppController } from './app/app.controller';
     RecipeModule,
     AuthModule,
     UsersModule,
+    CryptoModule,
   ],
   controllers: [AppController],
 })

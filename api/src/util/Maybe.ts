@@ -1,4 +1,4 @@
-import { curry, curryN } from 'ramda';
+import { curry } from 'ramda';
 
 export enum MaybeType {
   Just = 'maybe-type_just',
@@ -14,7 +14,7 @@ interface Nothing {
   type: typeof MaybeType.Nothing;
 }
 
-type Maybe<T> = Just<T> | Nothing;
+export type Maybe<T> = Just<T> | Nothing;
 
 const Nothing = (): Nothing => ({ type: MaybeType.Nothing });
 
@@ -32,7 +32,19 @@ function maybeMap<A, B>(f: (val: A) => B, m: Maybe<A>): Maybe<B> {
     case MaybeType.Nothing:
       return Nothing();
     default:
-      return Just(f(m.value));
+      return Maybe.of(f(m.value));
+  }
+}
+
+async function maybeMapAsync<A, B>(
+  f: (val: A) => Promise<B>,
+  m: Maybe<A>,
+): Promise<Maybe<B>> {
+  switch (m.type) {
+    case MaybeType.Nothing:
+      return Nothing();
+    default:
+      return Maybe.of(await f(m.value));
   }
 }
 
@@ -45,9 +57,9 @@ const maybeChain = <A, B>(f: (val: A) => Maybe<B>, m: Maybe<A>): Maybe<B> => {
   }
 };
 
-const match = <T, B>(
-  ifJust: (v: T) => B,
-  ifNothing: () => B,
+const match = <T, Success, Fail>(
+  ifJust: (v: T) => Success,
+  ifNothing: () => Fail,
   m: Maybe<T>,
 ): Maybe<T> => {
   switch (m.type) {
@@ -63,6 +75,7 @@ const match = <T, B>(
 export const Maybe = {
   of: maybeOf,
   map: curry(maybeMap),
+  mapAsync: curry(maybeMapAsync),
   chain: curry(maybeChain),
   match: curry(match),
 };
