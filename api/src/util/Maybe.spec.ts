@@ -1,7 +1,7 @@
 import { Maybe, MaybeType } from './Maybe';
 import { compose } from 'ramda';
 
-describe.only('Maybe<T>', () => {
+describe('Maybe<T>', () => {
   describe('Maybe.of', () => {
     it('will return Nothing if undefined', () => {
       const result = Maybe.of(undefined);
@@ -65,6 +65,38 @@ describe.only('Maybe<T>', () => {
       const result = curried(curried(curried(start)));
       expect(result.type).toEqual(MaybeType.Just);
       expect((result as { value: number }).value).toEqual(3);
+    });
+  });
+
+  describe('Maybe.match', () => {
+    it('runs the ifNothing-function if is nothing', () => {
+      let ifNothingSpy = false;
+      let ifJustSpy = false;
+      const ifNothing = () => {
+        ifNothingSpy = true;
+      };
+      const ifJust = () => {
+        ifJustSpy = true;
+      };
+      const result = Maybe.match(ifJust, ifNothing, Maybe.of(undefined));
+      expect(ifNothingSpy).toEqual(true);
+      expect(ifJustSpy).toEqual(false);
+      expect(result.type).toEqual(MaybeType.Nothing);
+    });
+
+    it('runs the ifJust-function if is Just', () => {
+      let ifNothingSpy = false;
+      let ifJustSpy = false;
+      const ifNothing = () => {
+        ifNothingSpy = true;
+      };
+      const ifJust = () => {
+        ifJustSpy = true;
+      };
+      const result = Maybe.match(ifJust, ifNothing, Maybe.of(1));
+      expect(ifNothingSpy).toEqual(false);
+      expect(ifJustSpy).toEqual(true);
+      expect(result.type).toEqual(MaybeType.Just);
     });
   });
 });

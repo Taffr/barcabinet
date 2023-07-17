@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RecipeModule } from './recipes/recipe.module';
 import { FirestoreModule } from './firestore/firestore.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { FirestoreModule } from './firestore/firestore.module';
       inject: [ConfigService],
     }),
     RecipeModule,
+    AuthModule,
+    UsersModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

@@ -45,8 +45,24 @@ const maybeChain = <A, B>(f: (val: A) => Maybe<B>, m: Maybe<A>): Maybe<B> => {
   }
 };
 
+const match = <T, B>(
+  ifJust: (v: T) => B,
+  ifNothing: () => B,
+  m: Maybe<T>,
+): Maybe<T> => {
+  switch (m.type) {
+    case MaybeType.Nothing:
+      ifNothing();
+      return Nothing();
+    default:
+      ifJust(m.value);
+      return Just(m.value);
+  }
+};
+
 export const Maybe = {
   of: maybeOf,
   map: curry(maybeMap),
   chain: curry(maybeChain),
+  match: curry(match),
 };
