@@ -14,7 +14,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(userName: string, password: string) {
     return Maybe.match(
       identity,
-      () => new UnauthorizedException(),
+      () => {
+        throw new UnauthorizedException();
+      },
       await this.authService.validateUser(userName, password),
     );
   }

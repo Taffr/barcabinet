@@ -35,7 +35,11 @@ Given(
 );
 
 When('I GET {string}', async function (this: AcceptanceWorld, route: string) {
-  await this.handleResponse(request(this.app.getHttpServer()).get(route));
+  await this.handleResponse(
+    request(this.app.getHttpServer())
+      .get(route)
+      .set('Authorization', `Bearer ${this.token}`),
+  );
 });
 
 Then(

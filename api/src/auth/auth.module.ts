@@ -5,10 +5,12 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { CryptoModule } from '../crypto/crypto.module';
 import { JWT_CONSTANTS } from './auth.constants';
 
 @Module({
   imports: [
+    CryptoModule,
     UsersModule,
     PassportModule,
     JwtModule.register({
