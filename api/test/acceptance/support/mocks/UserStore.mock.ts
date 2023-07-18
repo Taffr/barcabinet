@@ -5,9 +5,9 @@ import { find } from 'ramda';
 
 class MockUserStore {
   private userCollection: User[] = [];
-  async addUser(u: User): Promise<User> {
+  async addUser(u: User): Promise<void> {
     this.userCollection.push(u);
-    return Promise.resolve(u);
+    return Promise.resolve();
   }
 
   async findByName(nameToFind: string): Promise<Maybe<User>> {
