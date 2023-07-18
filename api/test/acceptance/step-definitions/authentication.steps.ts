@@ -15,7 +15,7 @@ Given(
     const usersToRegister: User[] = await Promise.all(
       map(
         async (h) => ({
-          id: Number(h.id),
+          id: h.id,
           name: h.name,
           hash: await cryptoService.hash(h.password),
         }),

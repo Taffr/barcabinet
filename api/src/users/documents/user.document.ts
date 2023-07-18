@@ -1,7 +1,7 @@
 export class User {
   static collectionName = 'users';
 
-  id: number;
+  id: string;
   name: string;
   hash: string;
 }

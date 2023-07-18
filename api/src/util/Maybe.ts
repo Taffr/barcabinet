@@ -72,10 +72,26 @@ const match = <T, Success, Fail>(
   }
 };
 
+const matchAsync = async <T, Success, Fail>(
+  ifJust: (v: T) => Promise<Success>,
+  ifNothing: () => Promise<Fail>,
+  m: Maybe<T>,
+): Promise<Maybe<T>> => {
+  switch (m.type) {
+    case MaybeType.Nothing:
+      await ifNothing();
+      return Nothing();
+    default:
+      await ifJust(m.value);
+      return Maybe.of(m.value);
+  }
+};
+
 export const Maybe = {
   of: maybeOf,
   map: curry(maybeMap),
   mapAsync: curry(maybeMapAsync),
   chain: curry(maybeChain),
   match: curry(match),
+  matchAsync: curry(matchAsync),
 };
