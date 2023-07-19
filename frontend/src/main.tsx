@@ -6,6 +6,7 @@ import {
 import { AllIngredients } from './components/all-ingredients.tsx'
 import { AllRecipes } from './components/all-recipes.tsx'
 import { Home } from './components/home.tsx'
+import { Login } from './components/login.tsx'
 import App from './App.tsx'
 import { ErrorPage } from './error-page.tsx'
 import React from 'react'
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />
+      },
+      {
+        path: '/login',
+        element: <Login />
       }
     ]
   },
