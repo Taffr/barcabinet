@@ -30,7 +30,13 @@ export function AllIngredients () {
   return (
     <Stack spacing={ 5 }>
       {
-        ingredients.length === 0 && <LinearProgress color="inherit"/>
+        ingredients.length === 0 &&
+          <Stack spacing={ 5 }>
+            <LinearProgress color="inherit"/>
+            <Typography>
+              Loading ingredients...
+            </Typography>
+          </Stack>
       }
       { ingredients.length !== 0 &&
         <>

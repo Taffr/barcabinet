@@ -61,7 +61,13 @@ export function AllRecipes () {
   return (
     <Stack spacing={ 5 }>
       {
-        recipes.length === 0 && <LinearProgress color="inherit"/>
+        recipes.length === 0 &&
+          <Stack spacing={ 5 }>
+            <LinearProgress color="inherit"/>
+            <Typography>
+              Loading recipes...
+            </Typography>
+          </Stack>
       }
       { recipes.length !== 0 &&
         <>
