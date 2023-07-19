@@ -28,6 +28,13 @@ jobs:
       run: yarn
       working-directory: api
 
+    - name: Create .env.test file
+      run: |
+        touch .env.test
+        echo JWT_SECRET=TESTING_SECRET >> .env.test
+        cat .env.test
+      working-directory: api
+
     - name: Run Linter
       run: yarn lint
       working-directory: api

@@ -49,7 +49,6 @@ Then('I get a validation error', function (this: AcceptanceWorld) {
 Then(
   'I am informed that the user already exists',
   function (this: AcceptanceWorld) {
-    console.log(this.response);
     expect(this.response.code).to.be.equal(409);
   },
 );

@@ -18,7 +18,7 @@ import { RegisterModule } from './register/register.module';
   ],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.prod', '.env.dev'],
+      envFilePath: ['.env.test', '.env.dev', '.env.prod'],
       isGlobal: true,
     }),
     FirestoreModule.forRoot({

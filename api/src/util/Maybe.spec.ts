@@ -1,5 +1,4 @@
 import { Maybe, MaybeType } from './Maybe';
-import { compose } from 'ramda';
 
 describe('Maybe<T>', () => {
   describe('Maybe.of', () => {

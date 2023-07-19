@@ -1,6 +1,10 @@
 # Use an official Node.js 18 image as the base
 FROM node:18 AS builder
 
+ENV JWT_SECRET=$JWT_SECRET
+ENV SA_KEY=$SA_KEY
+ENV PROJECT_ID=$PROJECT_ID
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -25,10 +29,6 @@ WORKDIR /app
 # Copy the built files from the builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json /app/yarn.lock ./
-
-# Copy Secrets and Env vars
-COPY .secrets/ .secrets/
-COPY .env.prod .env.prod
 
 # Install only production dependencies using yarn
 RUN yarn install --production
