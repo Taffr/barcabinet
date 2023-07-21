@@ -10,6 +10,7 @@ import {
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import {
   Button,
+  LinearProgress,
   Stack,
   TextField,
   Typography,
@@ -24,7 +25,8 @@ const ERRORS = {
 export function Login () {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ errorMessage, setErrorMessage ] = useState('')
+  const [ message, setMessage ] = useState('')
+  const [ isSigningIn, setIsSigningIn ] = useState(false)
   const [ nameError, setNameError ]  = useState(false)
   const [ passwordError, setPasswordError ] = useState(false)
   const navigate = useNavigate()
@@ -32,15 +34,16 @@ export function Login () {
 
   const handleLoginFail = (error: AxiosError) => {
     const { response } = error
+    setIsSigningIn(false)
     switch(response?.status) {
       case ERRORS.CONFLICT:
-        setErrorMessage('Name already in use')
+        setMessage('Name already in use')
         break
       case ERRORS.UNAUTHORIZED:
-        setErrorMessage('Username does not exist, or password is wrong')
+        setMessage('Username does not exist, or password is wrong')
         break
       default:
-        setErrorMessage('Server error, please try again later')
+        setMessage('Server error, please try again later')
     }
   }
 
@@ -75,6 +78,8 @@ export function Login () {
 
     if (anyError) return
 
+    setIsSigningIn(true)
+    setMessage('Signing in ...')
     axios.post(`${import.meta.env.VITE_BARCABINET_API_URL}/auth/login`, {
       username,
       password,
@@ -115,8 +120,9 @@ export function Login () {
          </Stack>
       </form>
       <Typography>
-       { errorMessage }
+       { message }
       </Typography>
+      { isSigningIn && <LinearProgress color="inherit"/> }
     </Stack>
   )
 }
