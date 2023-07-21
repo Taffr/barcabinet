@@ -6,19 +6,9 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import {
-  useEffect,
-  useState
-} from 'react'
 import { map } from 'ramda'
-
-type Ingredient = { name: string, id: number }
-type Recipe = {
-  _id: string,
-  name: string,
-  preparation: string,
-  ingredients: Ingredient[],
-}
+import { useRecipes } from '../hooks/useRecipes'
+import type { Recipe } from '../interfaces/recipe.interface'
 
 const RecipeListItem = (recipe: Recipe) => {
   const { name, ingredients, preparation } = recipe
@@ -38,10 +28,10 @@ const RecipeListItem = (recipe: Recipe) => {
           justifyContent="center"
           spacing={ 2 }
         >
-    { map(({ name }) =>
-      <Chip label={ name } variant="outlined" />
-      , ingredients)
-    }
+        { map(({ name }) =>
+          <Chip label={ name } variant="outlined" />
+          , ingredients)
+        }
         </Stack>
       </Stack>
     </Card>
@@ -49,19 +39,11 @@ const RecipeListItem = (recipe: Recipe) => {
 }
 
 export function AllRecipes () {
-  const [ recipes, setRecipes ] = useState([])
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_BARCABINET_API_URL}/recipes`)
-      .then((r) => r.json())
-      .then(setRecipes)
-      .catch(console.error)
-  }, [])
-
+  const { isLoading, recipes } = useRecipes()
   return (
     <Stack spacing={ 5 }>
       {
-        recipes.length === 0 &&
+        isLoading &&
           <Stack spacing={ 5 }>
             <LinearProgress color="inherit"/>
             <Typography>
@@ -69,7 +51,7 @@ export function AllRecipes () {
             </Typography>
           </Stack>
       }
-      { recipes.length !== 0 &&
+      { !isLoading &&
         <>
           <Typography variant="h1">
             Recipes

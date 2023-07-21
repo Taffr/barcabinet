@@ -14,10 +14,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import type { User } from '../interfaces/user.interface'
 
-type User = { id: string, name: string }
-const CONFLICT_ERROR = 409
-const UNAUTHORIZED_ERROR = 401
+const ERRORS = {
+  CONFLICT: 409,
+  UNAUTHORIZED: 401,
+}
 
 export function Login () {
   const [ username, setUsername ] = useState('')
@@ -31,10 +33,10 @@ export function Login () {
   const handleLoginFail = (error: AxiosError) => {
     const { response } = error
     switch(response?.status) {
-      case CONFLICT_ERROR:
+      case ERRORS.CONFLICT:
         setErrorMessage('Name already in use')
         break
-      case UNAUTHORIZED_ERROR:
+      case ERRORS.UNAUTHORIZED:
         setErrorMessage('Username does not exist, or password is wrong')
         break
       default:

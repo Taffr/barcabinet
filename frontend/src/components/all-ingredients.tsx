@@ -5,32 +5,21 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import {
-  useEffect,
-  useState,
-} from 'react'
 import { map } from 'ramda'
+import { useIngredients } from '../hooks/useIngredients'
+import type { Ingredient } from '../interfaces/ingredient.interface'
 
-const IngredientGridItem = (i: { name: string, id: number } ) =>
+const IngredientGridItem = (i: Ingredient) =>
   <Grid item>
     <Chip label={ i.name } />
   </Grid>
 
-
 export function AllIngredients () {
- const [ ingredients, setIngredients ] = useState([])
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_BARCABINET_API_URL}/recipes/ingredients`)
-      .then((r) => r.json())
-      .then(setIngredients)
-      .catch(console.error)
-  }, [])
-
+  const { isLoading, ingredients } = useIngredients()
   return (
     <Stack spacing={ 5 }>
       {
-        ingredients.length === 0 &&
+        isLoading &&
           <Stack spacing={ 5 }>
             <LinearProgress color="inherit"/>
             <Typography>
@@ -38,7 +27,7 @@ export function AllIngredients () {
             </Typography>
           </Stack>
       }
-      { ingredients.length !== 0 &&
+      { !isLoading &&
         <>
           <Typography variant="h1">
             Ingredients
