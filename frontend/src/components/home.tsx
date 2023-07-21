@@ -19,6 +19,7 @@ export function Home () {
           <Link to='/recipes'> View all recipes  </Link>
           <Link to='/ingredients'> View all ingredients  </Link>
           { !isLoggedIn && <Link to='/login'> Login </Link> }
+          { !isLoggedIn && <Link to='/register'> Register </Link> }
         </Stack>
       </Typography>
     </Stack>

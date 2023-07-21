@@ -15,15 +15,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { isEmpty } from 'ramda'
+import {
+  isEmpty,
+} from 'ramda'
+
 import type { User } from '../interfaces/user.interface'
 
 const ERRORS = {
-  UNAUTHORIZED: 401,
+  CONFLICT: 409,
 }
 
-export function Login () {
-  const [ username, setUsername ] = useState('')
+export function Register () {
+  const [ name, setName ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ message, setMessage ] = useState('')
   const [ isSigningIn, setIsSigningIn ] = useState(false)
@@ -32,29 +35,37 @@ export function Login () {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleLoginFail = (error: AxiosError) => {
+  const handleRegisterFailure = (error: AxiosError) => {
     const { response } = error
     setIsSigningIn(false)
     switch(response?.status) {
-      case ERRORS.UNAUTHORIZED:
-        setMessage('Username does not exist, or password is wrong')
+      case ERRORS.CONFLICT:
+        setMessage('Name already in use')
+        setNameError(true)
         break
       default:
         setMessage('Server error, please try again later')
     }
   }
 
-  const handleLoginSuccess = ({ data }: AxiosResponse) => {
-    const { access_token } = data
-    localStorage.setItem('access_token', access_token)
-    axios.get(`${import.meta.env.VITE_BARCABINET_API_URL}/profile`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`
-      }
+  const handleRegisterSuccess = (username: string, password: string) => () => {
+    setMessage('Signing you in ...')
+    axios.post(`${import.meta.env.VITE_BARCABINET_API_URL}/auth/login`, {
+      username,
+      password,
     })
-    .then(({ data }: AxiosResponse<User>) => {
-      dispatch({ type: 'user/userLoggedIn', payload: data })
-      navigate('/')
+    .then(({ data }: AxiosResponse) => {
+      const { access_token } = data
+      localStorage.setItem('access_token', access_token)
+      axios.get<User>(`${import.meta.env.VITE_BARCABINET_API_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        }
+      })
+      .then(({ data }) => {
+        dispatch({ type: 'user/userLoggedIn', payload: data })
+        navigate('/')
+      })
     })
   }
 
@@ -63,7 +74,7 @@ export function Login () {
 
     let anyError = false
 
-    if (isEmpty(username)) {
+    if (isEmpty(name)) {
       setNameError(true)
       anyError = true
     }
@@ -76,19 +87,19 @@ export function Login () {
     if (anyError) return
 
     setIsSigningIn(true)
-    setMessage('Signing in ...')
-    axios.post(`${import.meta.env.VITE_BARCABINET_API_URL}/auth/login`, {
-      username,
+    setMessage('Registering ...')
+    axios.post(`${import.meta.env.VITE_BARCABINET_API_URL}/register`, {
+      name,
       password,
     })
-    .then(handleLoginSuccess)
-    .catch(handleLoginFail)
+    .then(handleRegisterSuccess(name, password))
+    .catch(handleRegisterFailure)
   }
 
   return (
     <Stack spacing={ 5 } alignItems='center'>
       <Typography variant="h3">
-        Login to manage your cabinet
+        Register your account
       </Typography>
       <form onSubmit={ handleSubmit }>
         <Stack direction="row" spacing={2}>
@@ -96,7 +107,7 @@ export function Login () {
             label="Username"
             error={ nameError }
             onChange={(e) => {
-              setUsername(e.target.value)
+              setName(e.target.value)
               setNameError(false)
             }}
           />
