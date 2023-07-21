@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
-type UserState = { name: string } | undefined
+import type { User } from '../interfaces/user.interface'
 
+type UserState = User | undefined
 export const userReducer: Reducer = (
   state: UserState = undefined,
   action
