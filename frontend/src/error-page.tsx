@@ -1,5 +1,6 @@
-import { Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useRouteError } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 type RouteError = { status: number, statusText?: string, message?: string }
 export function ErrorPage () {
@@ -15,6 +16,9 @@ export function ErrorPage () {
         <p>
           <i> { error.statusText || error.message } </i>
         </p>
+        <Button>
+          <Link to="/"> Go back home </Link>
+        </Button>
       </Stack>
     </div>
   )
