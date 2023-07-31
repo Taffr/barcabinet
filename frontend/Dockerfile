@@ -10,8 +10,10 @@ RUN yarn install --frozen-lockfile
 
 COPY . ./
 
+# Use build arg as the environment variable will be replaced to a static string when bundling
+ARG VITE_BARCABINET_API_URL
 # Set environment variable
-ENV VITE_BARCABINET_API_URL=$VITE_BARCABINET_API_URL
+ENV VITE_BARCABINET_API_URL=${VITE_BARCABINET_API_URL}
 RUN yarn build
 
 # Stage 2: Serve the built React application
