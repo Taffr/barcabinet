@@ -16,7 +16,7 @@ import {
 import type { Recipe } from '../interfaces/recipe.interface'
 
 export const useRecipes = () => {
-  const cachedRecipes = useSelector<Recipe[] | undefined>(prop('recipes'))
+  const cachedRecipes: Recipe[] = useSelector(prop('recipes')) || []
   const dispatch = useDispatch()
   const [ recipes, setRecipes ] = useState(cachedRecipes || [])
 
