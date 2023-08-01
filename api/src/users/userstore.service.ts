@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CollectionReference } from '@google-cloud/firestore';
-import { head } from 'ramda';
+import { compose, head } from 'ramda';
 import { Maybe } from '../util/Maybe';
 import { User } from './documents/user.document';
 
@@ -16,9 +16,11 @@ export class UserStore {
   }
 
   async findByName(nameToFind: string): Promise<Maybe<User>> {
+    const getSafeFirstUser = compose(Maybe.of, head);
     const usersWithName = await this.userCollection
       .where('name', '==', nameToFind)
       .get();
-    return Maybe.of(head(await usersWithName.docs.map((doc) => doc.data())));
+
+    return getSafeFirstUser(await usersWithName.docs.map((doc) => doc.data()));
   }
 }
