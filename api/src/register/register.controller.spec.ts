@@ -5,6 +5,7 @@ import { UserStore } from '../users/userstore.service';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
 import { User } from '../users/documents/user.document';
+
 describe('RegisterController', () => {
   let controller: RegisterController;
 

@@ -13,17 +13,15 @@ export class AuthService {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async validateUser(
-    name: string,
-    incomingPassword: string,
-  ): Promise<Maybe<User>> {
-    return Maybe.mapAsync(async (user: User) => {
+  async validateUser(name: string, incomingPassword: string) {
+    const maybeUser = await this.userStore.findByName(name);
+    return maybeUser.mapAsync(async (user: User) => {
       const { hash, ...rest } = user;
       if (await this.cryptoService.compare(incomingPassword, hash)) {
         return { user: rest };
       }
       return undefined;
-    }, await this.userStore.findByName(name));
+    });
   }
 
   async login(user: User) {

@@ -1,97 +1,64 @@
-import { curry } from 'ramda';
-
 export enum MaybeType {
   Just = 'maybe-type_just',
   Nothing = 'maybe-type_nothing',
 }
 
-interface Just<T> {
-  type: typeof MaybeType.Just;
-  value: T;
+export class Maybe<T> {
+  private constructor(
+    private readonly value: T,
+    private readonly type: MaybeType,
+  ) {}
+
+  private static nothing() {
+    return new Maybe(undefined, MaybeType.Nothing);
+  }
+
+  private static just<T>(v: T) {
+    return new Maybe(v, MaybeType.Just);
+  }
+
+  static of<T>(value: T) {
+    if (value === undefined || value === null) {
+      return Maybe.nothing();
+    }
+    return Maybe.just(value);
+  }
+
+  map<B>(f: (val: T) => B): Maybe<B> {
+    if (this.type === MaybeType.Nothing) {
+      return Maybe.nothing();
+    }
+    return Maybe.of<B>(f(this.value));
+  }
+
+  chain<B>(f: (val: T) => Maybe<B>): Maybe<B> {
+    if (this.type === MaybeType.Nothing) {
+      return Maybe.nothing();
+    }
+    return f(this.value);
+  }
+
+  match<A, B>(ifJustFn: (val: T) => A, ifNothingFn: () => B) {
+    if (this.type === MaybeType.Nothing) {
+      return ifNothingFn();
+    }
+    return ifJustFn(this.value);
+  }
+
+  async mapAsync<B>(f: (val: T) => Promise<B>): Promise<Maybe<B>> {
+    if (this.type === MaybeType.Nothing) {
+      return Maybe.nothing();
+    }
+    return Maybe.of(await f(this.value));
+  }
+
+  async matchAsync<A, B>(
+    ifJustFn: (val: T) => Promise<A>,
+    ifNothingFn: () => Promise<B>,
+  ): Promise<A | B> {
+    if (this.type === MaybeType.Nothing) {
+      return await ifNothingFn();
+    }
+    return await ifJustFn(this.value);
+  }
 }
-
-interface Nothing {
-  type: typeof MaybeType.Nothing;
-}
-
-export type Maybe<T> = Just<T> | Nothing;
-
-const Nothing = (): Nothing => ({ type: MaybeType.Nothing });
-
-const Just = <T>(v: T): Just<T> => ({ type: MaybeType.Just, value: v });
-
-function maybeOf<T>(value: T): Maybe<T> {
-  if (value === undefined || value === null) {
-    return Nothing();
-  }
-  return Just(value);
-}
-
-function maybeMap<A, B>(f: (val: A) => B, m: Maybe<A>): Maybe<B> {
-  switch (m.type) {
-    case MaybeType.Nothing:
-      return Nothing();
-    default:
-      return Maybe.of(f(m.value));
-  }
-}
-
-async function maybeMapAsync<A, B>(
-  f: (val: A) => Promise<B>,
-  m: Maybe<A>,
-): Promise<Maybe<B>> {
-  switch (m.type) {
-    case MaybeType.Nothing:
-      return Nothing();
-    default:
-      return Maybe.of(await f(m.value));
-  }
-}
-
-const maybeChain = <A, B>(f: (val: A) => Maybe<B>, m: Maybe<A>): Maybe<B> => {
-  switch (m.type) {
-    case MaybeType.Nothing:
-      return Nothing();
-    default:
-      return f(m.value);
-  }
-};
-
-const match = <T, Success, Fail>(
-  ifJust: (v: T) => Success,
-  ifNothing: () => Fail,
-  m: Maybe<T>,
-): Maybe<T> => {
-  switch (m.type) {
-    case MaybeType.Nothing:
-      ifNothing();
-      return Nothing();
-    default:
-      ifJust(m.value);
-      return Just(m.value);
-  }
-};
-
-const matchAsync = async <T, Success, Fail>(
-  ifJust: (v: T) => Promise<Success>,
-  ifNothing: () => Promise<Fail>,
-  m: Maybe<T>,
-): Promise<Maybe<T>> => {
-  switch (m.type) {
-    case MaybeType.Nothing:
-      await ifNothing();
-      return Nothing();
-    default:
-      await ifJust(m.value);
-      return Maybe.of(m.value);
-  }
-};
-
-export const Maybe = {
-  of: maybeOf,
-  map: curry(maybeMap),
-  mapAsync: curry(maybeMapAsync),
-  chain: curry(maybeChain),
-  match: curry(match),
-  matchAsync: curry(matchAsync),
-};
