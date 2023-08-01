@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
 import { RegisterController } from './register.controller';
 import { UserStore } from '../users/userstore.service';
+import { CabinetStore } from '../cabinet/cabinetstore.service';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
 import { User } from '../users/documents/user.document';
@@ -21,6 +22,10 @@ describe('RegisterController', () => {
     },
   };
 
+  const mockCabinetStore = {
+    addForUser: (id: string) => Promise.resolve(id),
+  };
+
   beforeEach(async () => {
     userAddedSpy = undefined;
     const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +33,10 @@ describe('RegisterController', () => {
         {
           provide: UserStore,
           useValue: mockUserStore,
+        },
+        {
+          provide: CabinetStore,
+          useValue: mockCabinetStore,
         },
         CryptoService,
       ],

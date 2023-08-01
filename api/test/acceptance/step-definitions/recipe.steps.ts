@@ -22,6 +22,7 @@ Given(
         });
 
       const recipe: Recipe = {
+        id: r.id,
         name: r.name,
         ingredients: parsedIngredients,
         ...(r.garnish && { garnish: r.garnish }),

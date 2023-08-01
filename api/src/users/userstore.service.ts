@@ -11,8 +11,10 @@ export class UserStore {
     private userCollection: CollectionReference<User>,
   ) {}
 
-  async addUser(u: User) {
-    return this.userCollection.add(u);
+  async addUser(u: User): Promise<string> {
+    const addedUserRef = await this.userCollection.add(u);
+    const data = (await addedUserRef.get()).data();
+    return data.id;
   }
 
   async findByName(nameToFind: string): Promise<Maybe<User>> {
