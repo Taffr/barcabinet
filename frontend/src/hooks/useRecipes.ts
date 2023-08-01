@@ -18,7 +18,7 @@ import type { Recipe } from '../interfaces/recipe.interface'
 export const useRecipes = () => {
   const cachedRecipes: Recipe[] = useSelector(prop('recipes')) || []
   const dispatch = useDispatch()
-  const [ recipes, setRecipes ] = useState(cachedRecipes || [])
+  const [ recipes, setRecipes ] = useState(cachedRecipes)
 
   const fetchRecipes = async () => {
     if (!isEmpty(recipes)) {

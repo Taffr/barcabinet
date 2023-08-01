@@ -21,7 +21,7 @@ export const useIngredients = () => {
   }
 
   const onSuccess = (ingredients: Ingredient[]) => {
-    dispatch({ type: 'ingredient/ingredientsFetched', payload: ingredients })
+    dispatch({ type: 'ingredients/ingredientsFetched', payload: ingredients })
     setIngredients(ingredients)
   }
 

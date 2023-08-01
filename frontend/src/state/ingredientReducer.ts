@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 import type { Ingredient } from '../interfaces/ingredient.interface'
 
 export const ingredientReducer: Reducer = (
-  state: { ingredients: Ingredient[] } | undefined = undefined,
+  state: Ingredient[] | undefined = undefined,
   action
 ) => {
   switch(action.type) {
