@@ -2,9 +2,10 @@ import { Given, When, Then, DataTable } from '@cucumber/cucumber';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
 import { UserStore } from '../../../src/users/userstore.service';
+import { CabinetStore } from '../../../src/cabinet/cabinetstore.service';
 import { CryptoService } from '../../../src/crypto/crypto.service';
 import { User } from '../../../src/users/documents/user.document';
-import { head, map } from 'ramda';
+import { head, map, chain } from 'ramda';
 import { expect } from 'chai';
 
 Given(
@@ -12,6 +13,7 @@ Given(
   async function (this: AcceptanceWorld, dataTable: DataTable) {
     const cryptoService: CryptoService = this.app.get(CryptoService);
     const userStore: UserStore = this.app.get(UserStore);
+    const cabinetStore: CabinetStore = this.app.get(CabinetStore);
     const usersToRegister: User[] = await Promise.all(
       map(
         async (h) => ({
@@ -22,7 +24,12 @@ Given(
         dataTable.hashes(),
       ),
     );
-    await Promise.all(map((u) => userStore.addUser(u), usersToRegister));
+    await Promise.all(
+      chain(
+        (u) => [userStore.addUser(u), cabinetStore.addForUser(u.id)],
+        usersToRegister,
+      ),
+    );
   },
 );
 

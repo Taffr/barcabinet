@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AppController } from './app/app.controller';
 import { CryptoModule } from './crypto/crypto.module';
 import { RegisterModule } from './register/register.module';
+import { CabinetModule } from './cabinet/cabinet.module';
 
 @Module({
   providers: [
@@ -34,6 +35,7 @@ import { RegisterModule } from './register/register.module';
     UsersModule,
     CryptoModule,
     RegisterModule,
+    CabinetModule,
   ],
   controllers: [AppController],
 })

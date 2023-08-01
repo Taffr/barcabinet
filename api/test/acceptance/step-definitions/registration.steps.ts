@@ -46,6 +46,10 @@ Then('I get a validation error', function (this: AcceptanceWorld) {
   expect(this.response.code).to.be.equal(400);
 });
 
+Then('I get an authentication error', function (this: AcceptanceWorld) {
+  expect(this.response.code).to.be.equal(401);
+});
+
 Then(
   'I am informed that the user already exists',
   function (this: AcceptanceWorld) {

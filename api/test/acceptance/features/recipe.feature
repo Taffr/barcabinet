@@ -1,7 +1,7 @@
 Feature: Get Recipes and Ingredients
   Background:
     Given the following recipes exists
-      | id | name              | garnish            | preparation    |  ingredients                     |
+      | id | name              | garnish            | preparation    | ingredients                      |
       | 0  | Gin & Tonic       | whole pepper corns | Serve with ice | (1, Gin), (2, Tonic)             |
       | 1  | Hallands & Tonic  |                    | Serve with ice | (3, Hallands Fläder), (2, Tonic) |
 

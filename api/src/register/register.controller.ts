@@ -1,12 +1,14 @@
 import { Body, Controller, Post, ConflictException } from '@nestjs/common';
 import { RegisterUserDTO } from './dtos/register-user.dto';
 import { UserStore } from '../users/userstore.service';
+import { CabinetStore } from '../cabinet/cabinetstore.service';
 import { CryptoService } from '../crypto/crypto.service';
 
 @Controller('register')
 export class RegisterController {
   constructor(
     private readonly userStore: UserStore,
+    private readonly cabinetStore: CabinetStore,
     private readonly cryptoService: CryptoService,
   ) {}
 
@@ -21,7 +23,9 @@ export class RegisterController {
       async () => {
         const hash = await this.cryptoService.hash(password);
         const id = this.cryptoService.uuid();
-        await this.userStore.addUser({ id, hash, name });
+        return this.userStore.addUser({ id, hash, name }).then((id) => {
+          return this.cabinetStore.addForUser(id);
+        });
       },
     );
   }
