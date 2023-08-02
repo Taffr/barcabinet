@@ -1,7 +1,7 @@
 [
   {
     "Name": "Yellow Bird",
-    "Preparation": "Pour all ingredients into a cocktail shaker, shake well with ice, strain into chilled cocktail glass",
+    "Preparation": "Pour all ingredients into a cocktail shaker, shake well with ice, strain into chilled cocktail glass.",
     "Garnish": "",
     "Ingredients": [
       {
@@ -134,7 +134,6 @@
       },
       {
         "Name": "Ginger Beer",
-        "Dosage": 0,
         "Unit": "top up"
       }
     ]
@@ -156,7 +155,6 @@
       },
       {
         "Name": "Soda Water",
-        "Dosage": 0,
         "Unit": "Splash"
       }
     ]
@@ -253,7 +251,7 @@
     "Garnish": "Slice of lime",
     "Ingredients": [
       {
-        "Name": "100% Agave Tequila",
+        "Name": "Tequila",
         "Dosage": 50,
         "Unit": "ml"
       },
@@ -276,7 +274,7 @@
   },
   {
     "Name": "Old Cuban",
-    "Preparation": "Pour all ingredients except the wine into cocktail shaker, shake well with ice, strain into chilled elegant cocktail glass. Top up with the sparkling wine and garnish with mint sprigs",
+    "Preparation": "Pour all ingredients except the wine into cocktail shaker, shake well with ice, strain into chilled elegant cocktail glass. Top up with the sparkling wine and garnish with mint sprigs.",
     "Garnish": "Mint sprigs",
     "Ingredients": [
       {
@@ -317,7 +315,7 @@
     "Garnish": "Lemon or orange zest and cherry",
     "Ingredients": [
       {
-        "Name": "Whiskey",
+        "Name": "Bourbon Whiskey",
         "Dosage": 6,
         "Unit": "cl"
       },
@@ -373,7 +371,7 @@
   {
     "Name": "Lemon Drop",
     "Preparation": "Pour all ingredients into cocktail shaker, shake well with ice, strain into chilled cocktail glass. Garnish with sugar rim around the glass.",
-    "Garnish": "sugar around rim",
+    "Garnish": "Sugar around rim",
     "Ingredients": [
       {
         "Name": "Vodka Citron",
@@ -446,7 +444,6 @@
       },
       {
         "Name": "Cola",
-        "Dosage": 0,
         "Unit": "top up"
       }
     ]
@@ -462,7 +459,7 @@
         "Unit": "ml"
       },
       {
-        "Name": "Kahlúa",
+        "Name": "Coffee Liqueur",
         "Dosage": 30,
         "Unit": "ml"
       },
@@ -474,7 +471,7 @@
       {
         "Name": "Espresso",
         "Dosage": 1,
-        "Unit": "strong"
+        "Unit": "shot"
       }
     ]
   },
@@ -507,7 +504,7 @@
   },
   {
     "Name": "Bee's Knees",
-    "Preparation": "Stir honey syrup with lemon and orange juices until it dissolves, add gin and shake with ice. Strain into chilled cocktail glass",
+    "Preparation": "Stir honey syrup with lemon and orange juices until it dissolves, add gin and shake with ice. Strain into chilled cocktail glass.",
     "Garnish": "Optionally garnish with lemon or orange zest",
     "Ingredients": [
       {
@@ -559,7 +556,6 @@
       },
       {
         "Name": "Prosecco",
-        "Dosage": 0,
         "Unit": "top up"
       }
     ]
@@ -619,7 +615,7 @@
   {
     "Name": "Vesper",
     "Preparation": "Pour all ingredients into a cocktail shaker filled with ice cubes. Shake and strain into a chilled cocktail glass.",
-    "Garnish": "lemon zest",
+    "Garnish": "Lemon zest",
     "Ingredients": [
       {
         "Name": "Gin",
@@ -640,7 +636,7 @@
   },
   {
     "Name": "Tequila sunrise",
-    "Preparation": "Pour the tequila and orange juice into glass over ice.  Add the grenadine, which will sink to the bottom.  Stir gently to create the sunrise effect.  Garnish and serve.",
+    "Preparation": "Pour the tequila and orange juice into glass over ice. Add the grenadine, which will sink to the bottom. Stir gently to create the sunrise effect. Garnish and serve.",
     "Garnish": "orange slice and cherry",
     "Ingredients": [
       {
@@ -710,7 +706,7 @@
   {
     "Name": "Sex on the Beach",
     "Preparation": "Build all ingredients in a highball glass filled with ice. Garnish with orange slice.",
-    "Garnish": "orange slice",
+    "Garnish": "Orange slice",
     "Ingredients": [
       {
         "Name": "Vodka",
@@ -737,7 +733,7 @@
   {
     "Name": "Sea Breeze",
     "Preparation": "Build all ingredients in a highball glass filled with ice. Garnish with lime wedge.",
-    "Garnish": "lime slice",
+    "Garnish": "Lime slice",
     "Ingredients": [
       {
         "Name": "Vodka",
@@ -758,8 +754,8 @@
   },
   {
     "Name": "Pisco sour",
-    "Preparation": "Vigorously shake contents in a cocktail shaker with ice cubes, then strain into a glass and garnish with bitters.[1]",
-    "Garnish": "Angostura bitters (1 dash)",
+    "Preparation": "Vigorously shake contents in a cocktail shaker with ice cubes, then strain into a glass and garnish with bitters.",
+    "Garnish": "One dash of Angostura bitters ",
     "Ingredients": [
       {
         "Name": "Pisco",
@@ -777,9 +773,8 @@
         "Unit": "ml"
       },
       {
-        "Name": "White",
-        "Dosage": 1,
-        "Unit": "egg"
+        "Name": "Egg White",
+        "Dosage": 1
       },
       {
         "Name": "Aromatic Bitters",
@@ -835,7 +830,7 @@
   {
     "Name": "Mojito",
     "Preparation": "Mix mint sprigs with sugar and lime juice. Add splash of soda water and fill the glass with ice. Pour the rum and top with soda water. Light stir to involve all ingredients.",
-    "Garnish": "sprigs of mint and slice of lime",
+    "Garnish": "Sprigs of mint and slice of lime",
     "Ingredients": [
       {
         "Name": "White Rum",
@@ -859,7 +854,6 @@
       },
       {
         "Name": "Soda Water",
-        "Dosage": 0,
         "Unit": "top up"
       }
     ]
@@ -872,12 +866,12 @@
       {
         "Name": "Bourbon Whiskey",
         "Dosage": 6,
-        "Unit": "cL"
+        "Unit": "cl"
       },
       {
-        "Name": "Leaves",
+        "Name": "Mint",
         "Dosage": 4,
-        "Unit": "mint"
+        "Unit": "leaves"
       },
       {
         "Name": "Powdered Sugar",
@@ -969,8 +963,8 @@
   },
   {
     "Name": "Long Island Iced Tea",
-    "Preparation": "Add all ingredients into highball glass filled with ice. Stir gently. Optionally garnish with lemon slice.[1]",
-    "Garnish": "lemon slice (optional)",
+    "Preparation": "Add all ingredients into highball glass filled with ice. Stir gently. Optionally garnish with lemon slice.",
+    "Garnish": "Lemon slice (optional)",
     "Ingredients": [
       {
         "Name": "Tequila",
@@ -1009,7 +1003,6 @@
       },
       {
         "Name": "Cola",
-        "Dosage": 0,
         "Unit": "top up"
       }
     ]
@@ -1042,7 +1035,7 @@
         "Unit": "cl"
       },
       {
-        "Name": "Hot Coffee",
+        "Name": "Coffee",
         "Dosage": 8,
         "Unit": "cl"
       },
@@ -1074,7 +1067,7 @@
         "Unit": "cl"
       },
       {
-        "Name": "Angostura bitter",
+        "Name": "Angostura bitters",
         "Dosage": 1,
         "Unit": "dash"
       }
@@ -1326,9 +1319,9 @@
         "Unit": "ml"
       },
       {
-        "Name": "Spoon Bénédictine",
+        "Name": "Bénédictine",
         "Dosage": 1,
-        "Unit": "bar"
+        "Unit": "barspoon"
       },
       {
         "Name": "Peychaud's Bitters",
@@ -1339,8 +1332,8 @@
   },
   {
     "Name": "Tuxedo",
-    "Preparation": "Stir all ingredients with ice and strain into a cocktail glass.  Garnish with a cherry and a twist of lemon zest.",
-    "Garnish": "cherry, lemon zest",
+    "Preparation": "Stir all ingredients with ice and strain into a cocktail glass. Garnish with a cherry and a twist of lemon zest.",
+    "Garnish": "Cherry, lemon zest",
     "Ingredients": [
       {
         "Name": "Gin",
@@ -1372,7 +1365,7 @@
   {
     "Name": "Stinger",
     "Preparation": "Pour all ingredients into mixing glass with ice cubes. Stir well. Strain into chilled martini cocktail glass.",
-    "Garnish": "Optional mint leave  [sic]",
+    "Garnish": "Mint leaves (optional)",
     "Ingredients": [
       {
         "Name": "Cognac",
@@ -1410,7 +1403,7 @@
   },
   {
     "Name": "Sazerac",
-    "Preparation": "Rinse a chilled old-fashioned glass with the absinthe, add crushed ice, and set it aside. Stir the remaining ingredients over ice and set it aside. Discard the ice and any excess absinthe from the prepared glass, and strain the drink into the glass. Add the lemon peel for garnish.[1]",
+    "Preparation": "Rinse a chilled old-fashioned glass with the absinthe, add crushed ice, and set it aside. Stir the remaining ingredients over ice and set it aside. Discard the ice and any excess absinthe from the prepared glass, and strain the drink into the glass. Add the lemon peel for garnish.",
     "Garnish": "Lemon peel",
     "Ingredients": [
       {
@@ -1480,14 +1473,14 @@
     "Garnish": "Orange slice or zest, and cocktail cherry",
     "Ingredients": [
       {
-        "Name": "Bourbon Or Rye Whiskey",
+        "Name": "Bourbon Whiskey",
         "Dosage": 45,
         "Unit": "ml"
       },
       {
-        "Name": "Cube",
+        "Name": "Sugar",
         "Dosage": 1,
-        "Unit": "sugar"
+        "Unit": "cube"
       },
       {
         "Name": "Angostura Bitters",
@@ -1512,7 +1505,7 @@
         "Unit": "cl"
       },
       {
-        "Name": "Sweet Red Vermouth",
+        "Name": "Red Vermouth",
         "Dosage": 3,
         "Unit": "cl"
       },
@@ -1552,7 +1545,7 @@
   },
   {
     "Name": "Mary Pickford",
-    "Preparation": "Shake and strain into a chilled large cocktail glass",
+    "Preparation": "Shake and strain into a chilled large cocktail glass.",
     "Garnish": "",
     "Ingredients": [
       {
@@ -1580,7 +1573,7 @@
   {
     "Name": "Martinez",
     "Preparation": "Stirred over ice, strained into a chilled glass, garnished, and served up.",
-    "Garnish": "lemon zest",
+    "Garnish": "Lemon zest",
     "Ingredients": [
       {
         "Name": "London Dry Gin",
@@ -1593,9 +1586,9 @@
         "Unit": "ml"
       },
       {
-        "Name": "Spoon Maraschino Liqueur",
+        "Name": "Maraschino Liqueur",
         "Dosage": 1,
-        "Unit": "Bar"
+        "Unit": "barspoon"
       },
       {
         "Name": "Orange Bitters",
@@ -1615,7 +1608,7 @@
         "Unit": "ml"
       },
       {
-        "Name": "Sweet Red Vermouth",
+        "Name": "Red Vermouth",
         "Dosage": 20,
         "Unit": "ml"
       },
@@ -1691,7 +1684,7 @@
         "Unit": "ml"
       },
       {
-        "Name": "Sweet Red Vermouth",
+        "Name": "Red Vermouth",
         "Dosage": 45,
         "Unit": "ml"
       },
@@ -1737,7 +1730,7 @@
       {
         "Name": "Sugar",
         "Dosage": 2,
-        "Unit": "barspoons "
+        "Unit": "barspoon"
       }
     ]
   },
@@ -1768,8 +1761,7 @@
       },
       {
         "Name": "Egg White",
-        "Dosage": 1,
-        "Unit": "entire"
+        "Dosage": 1
       }
     ]
   },
@@ -1784,7 +1776,7 @@
         "Unit": "cl"
       },
       {
-        "Name": "Maraschino",
+        "Name": "Maraschino Liqueur",
         "Dosage": 1,
         "Unit": "cl"
       },
@@ -1816,9 +1808,9 @@
         "Unit": "ml"
       },
       {
-        "Name": "Spoon Curaçao",
+        "Name": "Curaçao",
         "Dosage": 1,
-        "Unit": "Bar"
+        "Unit": "barspoon"
       },
       {
         "Name": "Lemon Juice",
@@ -1853,7 +1845,7 @@
         "Unit": "ml"
       },
       {
-        "Name": "Sweet Red Vermouth",
+        "Name": "Red Vermouth",
         "Dosage": 30,
         "Unit": "ml"
       }
@@ -1889,7 +1881,7 @@
   {
     "Name": "Aviation",
     "Preparation": "Add all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass. Garnish with a cherry.",
-    "Garnish": "cherry",
+    "Garnish": "A Cherry",
     "Ingredients": [
       {
         "Name": "Gin",
@@ -1938,7 +1930,7 @@
   {
     "Name": "Americano",
     "Preparation": "Pour the Campari and vermouth over ice into an old fashioned glass, add a splash of soda water and garnish with half orange slice and a lemon twist.",
-    "Garnish": "half an orange slice, lemon twist",
+    "Garnish": "Half an orange slice, lemon twist",
     "Ingredients": [
       {
         "Name": "Campari",
@@ -1960,7 +1952,7 @@
   {
     "Name": "Alexander",
     "Preparation": "Pour all ingredients into cocktail shaker filled with ice cubes. Shake and strain into a chilled cocktail glass.",
-    "Garnish": "nutmeg",
+    "Garnish": "Nutmeg",
     "Ingredients": [
       {
         "Name": "Cognac",

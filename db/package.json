@@ -10,7 +10,9 @@
   "scripts": {
     "scrape": "npx scraper.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^9.0.0"
+  },
   "devDependencies": {
     "nodemon": "^2.0.22"
   }
