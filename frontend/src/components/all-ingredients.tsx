@@ -1,6 +1,6 @@
 import {
+  Box,
   Chip,
-  Grid,
   LinearProgress,
   Stack,
   Typography,
@@ -11,9 +11,7 @@ import type { Ingredient } from '../interfaces/ingredient.interface'
 
 const IngredientGridItem = (i: Ingredient) => {
   return (
-    <Grid item>
-      <Chip label={ i.name } />
-    </Grid>
+    <Chip label={ i.name } />
   )
 }
 
@@ -36,9 +34,13 @@ export function AllIngredients () {
           <Typography variant="h1">
             Ingredients
           </Typography>
-          <Grid container spacing={ 2 }>
+          <Box gap={ 1 } sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center'
+          }}>
             { map(IngredientGridItem, ingredients) }
-          </Grid>
+          </Box>
         </>
       }
     </Stack>
