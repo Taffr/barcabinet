@@ -6,6 +6,6 @@ export class Recipe {
   id: string;
   name: string;
   ingredients: Ingredient[];
-  preparation: string;
+  preparation?: string;
   garnish?: string;
 }

@@ -1,4 +1,4 @@
-import { Maybe, MaybeType } from './Maybe';
+import { Maybe } from './Maybe';
 
 describe('Maybe<T>', () => {
   describe('Maybe.of/Maybe.map', () => {

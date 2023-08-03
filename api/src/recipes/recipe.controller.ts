@@ -7,13 +7,13 @@ export class RecipeController {
   constructor(private readonly recipeStore: RecipeStore) {}
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.recipeStore.getAll();
   }
 
   @Get('ingredient/:id')
-  containingIngredient(@Param('id') id: string) {
-    return this.recipeStore.containingIngredient(Number(id));
+  async containingIngredient(@Param('id') id: string) {
+    return this.recipeStore.getContainingIngredientId(Number(id));
   }
 
   @Get('ingredients')
