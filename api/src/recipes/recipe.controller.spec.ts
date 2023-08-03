@@ -13,7 +13,7 @@ describe('RecipeController', () => {
         },
       ]);
     },
-    containingIngredient(ingredientId: number) {
+    getContainingIngredientId(ingredientId: number) {
       return Promise.resolve([
         {
           name: 'Another Cocktail',

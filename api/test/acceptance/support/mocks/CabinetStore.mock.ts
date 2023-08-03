@@ -20,7 +20,6 @@ class MockCabinetStore {
         update(index, { ownerId, ...updateCabinetDTO }, this.cabinetCollection),
       )
       .map((newArray) => {
-        console.log(newArray);
         this.cabinetCollection = newArray;
         return this.cabinetCollection;
       });

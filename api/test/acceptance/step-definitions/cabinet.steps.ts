@@ -1,16 +1,31 @@
 import { DataTable, Then, When } from '@cucumber/cucumber';
 import { UpdateCabinetDTO } from '../../../src/cabinet/dtos/update-cabinet.dto';
+import { ResolvedCabinet } from '../../../src/cabinet/interfaces/ResolvedCabinet.interface';
 import { head, map, isEmpty, pick } from 'ramda';
 import { assert } from 'chai';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
 
-const parseCabinet = (rawTable: Record<string, string>) => {
+const parseCabinet = (rawTable: Record<string, string>): ResolvedCabinet => {
   const { favourites, ingredients, ownerId } = rawTable;
-  const parsedFavourites = isEmpty(favourites) ? [] : favourites.split(', ');
-  const parsedIngredients = isEmpty(ingredients)
-    ? []
-    : map(Number, ingredients.split(', '));
+  const favouriteTouples = isEmpty(favourites) ? [] : favourites.split(', ');
+  const ingredientTouples = isEmpty(ingredients) ? [] : ingredients.split(', ');
+
+  const parsedFavourites = map((rawTouple) => {
+    const [id, name] = rawTouple.split(':');
+    return {
+      id: id.slice(1),
+      name: name.slice(0, name.length - 1),
+    };
+  }, favouriteTouples);
+
+  const parsedIngredients = map((rawTouple) => {
+    const [id, name] = rawTouple.split(':');
+    return {
+      id: Number(id.slice(1)),
+      name: name.slice(0, name.length - 1),
+    };
+  }, ingredientTouples);
 
   return {
     ownerId,
@@ -55,8 +70,6 @@ When(
         .send(cabinetToUpdate)
         .set('Authorization', `Bearer ${this.token}`),
     );
-    console.log(cabinetToUpdate);
-    console.log(this.response);
   },
 );
 

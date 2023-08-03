@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Recipe } from './documents/recipe.document';
 import { CollectionReference } from '@google-cloud/firestore';
+import { any, filter } from 'ramda';
 
 @Injectable()
 export class RecipeStore {
@@ -19,10 +20,23 @@ export class RecipeStore {
     return snapshot.docs.map((doc) => doc.data());
   }
 
-  async containingIngredient(ingredientId: number): Promise<Recipe[]> {
-    const allRecipes = await this.getAll();
-    return allRecipes.filter(({ ingredients }) =>
-      ingredients.some(({ id }) => ingredientId === id),
+  getByIds(recipeIds: string[]): Promise<Recipe[]> {
+    return this.recipeCollection
+      .where('id', 'in', recipeIds)
+      .get()
+      .then((ss) => ss.docs.map((d) => d.data()));
+  }
+
+  getContainingIngredientId(ingredientId: number) {
+    return this.getContainingIngredientIds([ingredientId]);
+  }
+
+  getContainingIngredientIds(ingredientIds: number[]): Promise<Recipe[]> {
+    const idsToFind = new Set(ingredientIds);
+    return this.getAll().then(
+      filter(({ ingredients }) =>
+        any(({ id }) => idsToFind.has(id), ingredients),
+      ),
     );
   }
 }

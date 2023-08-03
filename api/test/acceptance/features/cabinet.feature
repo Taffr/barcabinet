@@ -51,8 +51,8 @@ Feature: Cabinet
       | Alice | secret123 |
     When I update my cabinet with the following 
       | favourites | ingredients   |
-      | 0          | 1, 2          | 
+      | 0          | 1, 3          | 
     And I GET "/cabinet" 
     Then I get the following cabinet
-      | ownerId | favourites | ingredients |
-      | 1       | 0          | 1, 2        |
+      | ownerId | favourites      | ingredients                  |
+      | 1       | (0:Gin & Tonic) | (1:Gin), (3:Hallands Fläder) |
