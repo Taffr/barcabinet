@@ -5,7 +5,6 @@ import { RecipeModule } from './recipes/recipe.module';
 import { FirestoreModule } from './firestore/firestore.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { AppController } from './app/app.controller';
 import { CryptoModule } from './crypto/crypto.module';
 import { RegisterModule } from './register/register.module';
 import { CabinetModule } from './cabinet/cabinet.module';
@@ -37,6 +36,5 @@ import { CabinetModule } from './cabinet/cabinet.module';
     RegisterModule,
     CabinetModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
