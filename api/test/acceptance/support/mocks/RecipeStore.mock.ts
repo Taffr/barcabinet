@@ -1,5 +1,5 @@
 import { any, filter } from 'ramda';
-import { RecipeStore } from '../../../../src/recipes/recipestore.service';
+import { RecipeStore } from '../../../../src/recipes/recipe.store';
 import { Recipe } from '../../../../src/recipes/documents/recipe.document';
 
 class MockRecipeStore {

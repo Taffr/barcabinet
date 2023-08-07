@@ -1,7 +1,7 @@
 import { Body, Controller, Post, ConflictException } from '@nestjs/common';
 import { RegisterUserDTO } from './dtos/register-user.dto';
-import { UserStore } from '../users/userstore.service';
-import { CabinetStore } from '../cabinet/cabinetstore.service';
+import { UserStore } from '../users/user.store';
+import { CabinetStore } from '../cabinet/cabinet.store';
 import { CryptoService } from '../crypto/crypto.service';
 
 @Controller('register')

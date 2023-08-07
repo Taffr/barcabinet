@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
 import { RegisterController } from './register.controller';
-import { UserStore } from '../users/userstore.service';
-import { CabinetStore } from '../cabinet/cabinetstore.service';
+import { UserStore } from '../users/user.store';
+import { CabinetStore } from '../cabinet/cabinet.store';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
 import { User } from '../users/documents/user.document';

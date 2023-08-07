@@ -1,8 +1,8 @@
 import { Given, When, Then, DataTable } from '@cucumber/cucumber';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
-import { UserStore } from '../../../src/users/userstore.service';
-import { CabinetStore } from '../../../src/cabinet/cabinetstore.service';
+import { UserStore } from '../../../src/users/user.store';
+import { CabinetStore } from '../../../src/cabinet/cabinet.store';
 import { CryptoService } from '../../../src/crypto/crypto.service';
 import { User } from '../../../src/users/documents/user.document';
 import { head, map, chain } from 'ramda';
