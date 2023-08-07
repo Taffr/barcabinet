@@ -1,5 +1,4 @@
-import { DataTable, Given, When, Then } from '@cucumber/cucumber';
-import * as request from 'supertest';
+import { DataTable, Given, Then } from '@cucumber/cucumber';
 import { AcceptanceWorld } from '../support/world';
 import { RecipeStore } from '../../../src/recipes/recipe.store';
 import { Recipe } from '../../../src/recipes/documents/recipe.document';
@@ -34,14 +33,6 @@ Given(
     return Promise.all(recipesToInsert.map((r) => recipeStore.add(r)));
   },
 );
-
-When('I GET {string}', async function (this: AcceptanceWorld, route: string) {
-  await this.handleResponse(
-    request(this.app.getHttpServer())
-      .get(route)
-      .set('Authorization', `Bearer ${this.token}`),
-  );
-});
 
 Then(
   'I get recipes with the following names',
