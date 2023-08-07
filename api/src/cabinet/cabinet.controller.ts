@@ -10,8 +10,8 @@ import {
 import { always, identity } from 'ramda';
 import { Cabinet } from './documents/cabinet.document';
 import { ResolvedCabinet } from './interfaces/ResolvedCabinet.interface';
-import { CabinetStore } from './cabinetstore.service';
-import { RecipeStore } from '../recipes/recipestore.service';
+import { CabinetStore } from './cabinet.store';
+import { RecipeStore } from '../recipes/recipe.store';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateCabinetDTO } from './dtos/update-cabinet.dto';
 import { resolveCabinet } from './resolve-cabinet';

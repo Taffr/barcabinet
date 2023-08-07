@@ -1,7 +1,7 @@
 import { DataTable, Given, When, Then } from '@cucumber/cucumber';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
-import { RecipeStore } from '../../../src/recipes/recipestore.service';
+import { RecipeStore } from '../../../src/recipes/recipe.store';
 import { Recipe } from '../../../src/recipes/documents/recipe.document';
 import { Ingredient } from '../../../src/recipes/interfaces/ingredient.interface';
 import { assert } from 'chai';

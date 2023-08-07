@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RecipeStore } from './recipestore.service';
+import { RecipeStore } from './recipe.store';
 import { RecipeController } from './recipe.controller';
 
 @Module({

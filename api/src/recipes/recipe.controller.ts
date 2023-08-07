@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { RecipeStore } from './recipestore.service';
+import { RecipeStore } from './recipe.store';
 import { Ingredient } from './interfaces/ingredient.interface';
 
 @Controller('recipes')

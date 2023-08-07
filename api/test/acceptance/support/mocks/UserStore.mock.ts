@@ -1,4 +1,4 @@
-import { UserStore } from '../../../../src/users/userstore.service';
+import { UserStore } from '../../../../src/users/user.store';
 import { User } from '../../../../src/users/documents/user.document';
 import { Maybe } from '../../../../src/util/Maybe';
 import { find } from 'ramda';

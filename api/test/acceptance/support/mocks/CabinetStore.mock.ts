@@ -1,4 +1,4 @@
-import { CabinetStore } from '../../../../src/cabinet/cabinetstore.service';
+import { CabinetStore } from '../../../../src/cabinet/cabinet.store';
 import { Cabinet } from '../../../../src/cabinet/documents/cabinet.document';
 import { UpdateCabinetDTO } from '../../../../src/cabinet/dtos/update-cabinet.dto';
 import { Maybe } from '../../../../src/util/Maybe';
