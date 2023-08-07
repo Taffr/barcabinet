@@ -41,3 +41,16 @@ jobs:
           docker push $REPO_URL/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest
         working-directory: api
 
+      - name: (FRONTEND) Build and Push Docker image 
+        env:
+          REPO_URL: europe-west3-docker.pkg.dev
+          API_URL: ${{ secrets.API_URL }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          REPO_NAME: ${{ secrets.GCP_REPO_NAME }}
+          IMAGE_NAME: ${{ secrets.GCP_PROJECT_ID }}-frontend
+          TAG: latest
+        run: |
+          docker build --build-arg VITE-BARCABINET_API_URL=$API_URL $REPO_URL/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest .
+          docker push $REPO_URL/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest
+        working-directory: frontend
+
