@@ -26,7 +26,7 @@ Given(
     );
     await Promise.all(
       chain(
-        (u) => [userStore.addUser(u), cabinetStore.addForUser(u.id)],
+        (u) => [userStore.add(u), cabinetStore.addForUser(u.id)],
         usersToRegister,
       ),
     );
