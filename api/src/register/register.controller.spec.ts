@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
 import { RegisterController } from './register.controller';
 import { UserStore } from '../users/user.store';
+import { IUserStore } from '../users/interfaces/user.store.interface';
 import { CabinetStore } from '../cabinet/cabinet.store';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
@@ -12,13 +13,13 @@ describe('RegisterController', () => {
 
   let userAddedSpy: User | undefined;
 
-  const mockUserStore = {
+  const mockUserStore: IUserStore = {
     findByName: (name) => {
       return Promise.resolve(Maybe.of(name == 'exists' ? { name } : undefined));
     },
-    addUser: (u) => {
+    add: (u) => {
       userAddedSpy = u;
-      return Promise.resolve({ test: 'test' });
+      return Promise.resolve(u.id);
     },
   };
 

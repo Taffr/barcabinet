@@ -1,10 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Inject, Get, Param } from '@nestjs/common';
+import { IRecipeStore } from './interfaces/recipe.store.interface';
 import { RecipeStore } from './recipe.store';
 import { Ingredient } from './interfaces/ingredient.interface';
 
 @Controller('recipes')
 export class RecipeController {
-  constructor(private readonly recipeStore: RecipeStore) {}
+  constructor(
+    @Inject(RecipeStore)
+    private readonly recipeStore: IRecipeStore,
+  ) {}
 
   @Get()
   async getAll() {

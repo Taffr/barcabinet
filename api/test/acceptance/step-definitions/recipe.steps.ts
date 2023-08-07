@@ -31,7 +31,7 @@ Given(
       return recipe;
     });
     const recipeStore: RecipeStore = this.app.get(RecipeStore);
-    return Promise.all(recipesToInsert.map((r) => recipeStore.addRecipe(r)));
+    return Promise.all(recipesToInsert.map((r) => recipeStore.add(r)));
   },
 );
 

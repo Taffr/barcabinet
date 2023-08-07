@@ -1,20 +1,26 @@
-import { any, filter } from 'ramda';
-import { RecipeStore } from '../../../../src/recipes/recipe.store';
+import { any, filter, head } from 'ramda';
 import { Recipe } from '../../../../src/recipes/documents/recipe.document';
+import { Maybe } from '../../../../src/util/Maybe';
+import { IRecipeStore } from '../../../../src/recipes/interfaces/recipe.store.interface';
+import { RecipeStore } from '../../../../src/recipes/recipe.store';
 
-class MockRecipeStore {
+class MockRecipeStore implements IRecipeStore {
   private recipeCollection: Recipe[] = [];
 
-  addRecipe(r: Recipe): Promise<Recipe> {
+  add(r: Recipe): Promise<string> {
     this.recipeCollection.push(r);
-    return Promise.resolve(r);
+    return Promise.resolve(r.id);
   }
 
   getAll(): Promise<Recipe[]> {
     return Promise.resolve(this.recipeCollection);
   }
 
-  getByIds(recipeIds: string[]): Promise<Recipe[]> {
+  async findById(recipeId: string): Promise<Maybe<Recipe>> {
+    return Maybe.of(head(await this.findByIds([recipeId])));
+  }
+
+  findByIds(recipeIds: string[]): Promise<Recipe[]> {
     return Promise.resolve(
       filter(({ id }) => recipeIds.includes(id), this.recipeCollection),
     );

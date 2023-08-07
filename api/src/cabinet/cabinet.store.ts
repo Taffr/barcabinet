@@ -1,37 +1,36 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CollectionReference } from '@google-cloud/firestore';
-import { compose, head } from 'ramda';
+import { always } from 'ramda';
 import { Cabinet } from './documents/cabinet.document';
-import { UpdateCabinetDTO } from './dtos/update-cabinet.dto';
-import { Maybe } from '../util/Maybe';
-
-const getSafeFirst = compose(Maybe.of, head);
+import { ICabinetStore } from './interfaces/cabinet.store.interface';
+import { getSafeFirst } from '../util/funcs';
 
 @Injectable()
-export class CabinetStore {
+export class CabinetStore implements ICabinetStore {
   constructor(
     @Inject(Cabinet.collectionName)
     private cabinetCollection: CollectionReference<Cabinet>,
   ) {}
 
-  async addForUser(id: string) {
-    const newCabinet = { ownerId: id, favourites: [], ingredients: [] };
-    return this.cabinetCollection.add(newCabinet);
+  addForUser(id) {
+    return this.cabinetCollection
+      .add({ ownerId: id, favourites: [], ingredients: [] })
+      .then(always(id));
   }
 
-  async updateForOwner(ownerId: string, data: UpdateCabinetDTO) {
-    const matchingCabinets = await this.cabinetCollection
+  updateForOwner(ownerId, data) {
+    return this.cabinetCollection
       .where('ownerId', '==', ownerId)
-      .get();
-    return getSafeFirst(matchingCabinets.docs).mapAsync((ref) =>
-      ref.update(data),
-    );
+      .get()
+      .then((match) =>
+        getSafeFirst(match.docs).map((ref) => ref.update({ ownerId, ...data })),
+      );
   }
 
-  async getForOwner(ownerId: string): Promise<Maybe<Cabinet>> {
-    const matchingCabinets = await this.cabinetCollection
+  getForOwner(ownerId) {
+    return this.cabinetCollection
       .where('ownerId', '==', ownerId)
-      .get();
-    return getSafeFirst(await matchingCabinets.docs.map((doc) => doc.data()));
+      .get()
+      .then((match) => getSafeFirst(match.docs.map((doc) => doc.data())));
   }
 }

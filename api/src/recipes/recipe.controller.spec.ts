@@ -1,25 +1,58 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RecipeController } from '../recipes/recipe.controller';
-import { RecipeStore } from '../recipes/recipe.store';
+import { map } from 'ramda';
+import { Maybe } from '../util/Maybe';
+import { RecipeController } from './recipe.controller';
+import { RecipeStore } from './recipe.store';
+import { IRecipeStore } from './interfaces/recipe.store.interface';
+import { Recipe } from './documents/recipe.document';
 
 describe('RecipeController', () => {
   let recipeController: RecipeController;
 
-  const mockRecipeStore = {
+  const mockRecipeStore: IRecipeStore = {
+    add(doc: Recipe) {
+      return Promise.resolve(doc.id);
+    },
+
     getAll() {
-      return Promise.resolve([
+      const r = [
         {
           name: 'A Cocktail',
         },
-      ]);
+      ] as Recipe[];
+      return Promise.resolve(r);
     },
+
+    findById(id) {
+      return Promise.resolve(Maybe.of(id));
+    },
+
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    findByIds(ids) {
+      return Promise.resolve([]);
+    },
+
     getContainingIngredientId(ingredientId: number) {
       return Promise.resolve([
         {
           name: 'Another Cocktail',
           ingredients: [{ id: ingredientId }],
         },
-      ]);
+      ] as Recipe[]);
+    },
+
+    getContainingIngredientIds(ingredientIds: number[]) {
+      return Promise.resolve(
+        map(
+          (id) =>
+            ({
+              id: 'some id',
+              name: 'Another Cocktail',
+              ingredients: [{ id }],
+            } as Recipe),
+          ingredientIds,
+        ),
+      );
     },
   };
 
