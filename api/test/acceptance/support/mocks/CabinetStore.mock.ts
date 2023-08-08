@@ -3,7 +3,16 @@ import { CabinetStore } from '../../../../src/cabinet/cabinet.store';
 import { Cabinet } from '../../../../src/cabinet/documents/cabinet.document';
 import { UpdateCabinetDTO } from '../../../../src/cabinet/dtos/update-cabinet.dto';
 import { Maybe } from '../../../../src/util/Maybe';
-import { find, findIndex, propEq, update } from 'ramda';
+import {
+  append,
+  equals,
+  find,
+  findIndex,
+  includes,
+  propEq,
+  reject,
+  update,
+} from 'ramda';
 
 class MockCabinetStore implements ICabinetStore {
   private cabinetCollection: Cabinet[] = [];
@@ -33,9 +42,46 @@ class MockCabinetStore implements ICabinetStore {
     );
   }
 
-  async getForOwner(ownerId: string): Promise<Maybe<Cabinet>> {
+  getForOwner(ownerId: string): Promise<Maybe<Cabinet>> {
     return Promise.resolve(
       Maybe.of(find(propEq(ownerId, 'ownerId'), this.cabinetCollection)),
+    );
+  }
+
+  addToFavourites(ownerId: string, recipeId: string) {
+    return Promise.resolve(
+      Maybe.of(
+        findIndex(propEq(ownerId, 'ownerId'), this.cabinetCollection),
+      ).map((index) => {
+        const current = this.cabinetCollection[index];
+        const currentFavourites = current.favourites;
+        const newFavourites = includes(recipeId, currentFavourites)
+          ? currentFavourites
+          : append(recipeId, currentFavourites);
+        this.cabinetCollection = update(
+          index,
+          { ...current, favourites: newFavourites },
+          this.cabinetCollection,
+        );
+        return this.cabinetCollection[index];
+      }),
+    );
+  }
+  removeFromFavourites(ownerId: string, recipeId: string) {
+    return Promise.resolve(
+      Maybe.of(
+        findIndex(propEq(ownerId, 'ownerId'), this.cabinetCollection),
+      ).map((index) => {
+        const current = this.cabinetCollection[index];
+        const currentFavourites = current.favourites;
+        const withRemoved = reject(equals(recipeId), currentFavourites);
+        this.cabinetCollection = update(
+          index,
+          { ...current, favourites: withRemoved },
+          this.cabinetCollection,
+        );
+        return this.cabinetCollection[index];
+      }),
     );
   }
 }

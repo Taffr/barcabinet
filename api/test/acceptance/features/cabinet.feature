@@ -45,6 +45,7 @@ Feature: Cabinet
     When I update my cabinet with invalid data 
     Then I get a validation error
 
+  @successPutCabinet
   Scenario: Success PUT cabinet 
     Given I login with the following credentials
       | name  | password  |
@@ -56,3 +57,35 @@ Feature: Cabinet
     Then I get the following cabinet
       | ownerId | favourites      | ingredients                  |
       | 1       | (0:Gin & Tonic) | (1:Gin), (3:Hallands Fläder) |
+
+  @addFavouriteToCabinet
+  Scenario: Add to recipe to favourites
+    Given I login with the following credentials
+      | name  | password  |
+      | Alice | secret123 |
+    When I add the recipe with id "0" to my favourites
+    And I add the recipe with id "0" to my favourites
+    And I GET "/cabinet" 
+    Then I get the following cabinet
+      | ownerId | favourites      | ingredients |
+      | 1       | (0:Gin & Tonic) |             |
+
+  @removeFavouriteFromCabinet
+  Scenario: Add to recipe to favourites
+    Given I login with the following credentials
+      | name  | password  |
+      | Alice | secret123 |
+    When I add the recipe with id "0" to my favourites
+    When I add the recipe with id "1" to my favourites
+    And I GET "/cabinet" 
+    Then I get the following cabinet
+      | ownerId | favourites                            | ingredients |
+      | 1       | (0:Gin & Tonic), (1:Hallands & Tonic) |             |
+    When I remove the recipe with id "1" from my favourites
+    And I GET "/cabinet" 
+    Then I get the following cabinet
+      | ownerId | favourites      | ingredients |
+      | 1       | (0:Gin & Tonic) |             |
+
+
+

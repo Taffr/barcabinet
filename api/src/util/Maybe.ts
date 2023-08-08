@@ -52,6 +52,13 @@ export class Maybe<T> {
     return Maybe.of(await f(this.value));
   }
 
+  async chainAsync<B>(f: (val: T) => Promise<Maybe<B>>): Promise<Maybe<B>> {
+    if (this.type === MaybeType.Nothing) {
+      return Maybe.nothing();
+    }
+    return f(this.value);
+  }
+
   async matchAsync<A, B>(
     ifJustFn: (val: T) => Promise<A>,
     ifNothingFn: () => Promise<B>,
