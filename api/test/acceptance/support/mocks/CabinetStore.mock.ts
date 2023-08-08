@@ -67,6 +67,7 @@ class MockCabinetStore implements ICabinetStore {
       }),
     );
   }
+
   removeFromFavourites(ownerId: string, recipeId: string) {
     return Promise.resolve(
       Maybe.of(
@@ -78,6 +79,44 @@ class MockCabinetStore implements ICabinetStore {
         this.cabinetCollection = update(
           index,
           { ...current, favourites: withRemoved },
+          this.cabinetCollection,
+        );
+        return this.cabinetCollection[index];
+      }),
+    );
+  }
+
+  addToIngredients(ownerId: string, ingredientId: number) {
+    return Promise.resolve(
+      Maybe.of(
+        findIndex(propEq(ownerId, 'ownerId'), this.cabinetCollection),
+      ).map((index) => {
+        const current = this.cabinetCollection[index];
+        const currentIngredients = current.ingredients;
+        const newFavourites = includes(ingredientId, currentIngredients)
+          ? currentIngredients
+          : append(ingredientId, currentIngredients);
+        this.cabinetCollection = update(
+          index,
+          { ...current, ingredients: newFavourites },
+          this.cabinetCollection,
+        );
+        return this.cabinetCollection[index];
+      }),
+    );
+  }
+
+  removeFromIngredients(ownerId: string, ingredientId: number) {
+    return Promise.resolve(
+      Maybe.of(
+        findIndex(propEq(ownerId, 'ownerId'), this.cabinetCollection),
+      ).map((index) => {
+        const current = this.cabinetCollection[index];
+        const currentIngredients = current.ingredients;
+        const withRemoved = reject(equals(ingredientId), currentIngredients);
+        this.cabinetCollection = update(
+          index,
+          { ...current, ingredients: withRemoved },
           this.cabinetCollection,
         );
         return this.cabinetCollection[index];
