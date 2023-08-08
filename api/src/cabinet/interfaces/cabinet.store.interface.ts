@@ -6,4 +6,9 @@ export interface ICabinetStore {
   addForUser(id: string): Promise<string>;
   updateForOwner(id: string, dto: UpdateCabinetDTO): Promise<Maybe<Cabinet>>;
   getForOwner(ownerId: string): Promise<Maybe<Cabinet>>;
+  addToFavourites(ownerId: string, recipeId: string): Promise<Maybe<Cabinet>>;
+  removeFromFavourites(
+    ownerId: string,
+    recipeId: string,
+  ): Promise<Maybe<Cabinet>>;
 }

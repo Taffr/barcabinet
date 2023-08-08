@@ -105,3 +105,29 @@ When(
     );
   },
 );
+
+When(
+  'I add the recipe with id {string} to my favourites',
+  async function (this: AcceptanceWorld, id: number) {
+    const UPDATE_PATH = '/cabinet/favourites';
+    await this.handleResponse(
+      request(this.app.getHttpServer())
+        .patch(UPDATE_PATH)
+        .send({ id, action: 'add' })
+        .set('Authorization', `Bearer ${this.token}`),
+    );
+  },
+);
+
+When(
+  'I remove the recipe with id {string} from my favourites',
+  async function (this: AcceptanceWorld, id: string) {
+    const UPDATE_PATH = '/cabinet/favourites';
+    await this.handleResponse(
+      request(this.app.getHttpServer())
+        .patch(UPDATE_PATH)
+        .send({ id, action: 'remove' })
+        .set('Authorization', `Bearer ${this.token}`),
+    );
+  },
+);

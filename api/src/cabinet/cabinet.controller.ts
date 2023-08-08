@@ -4,11 +4,12 @@ import {
   Get,
   Inject,
   NotFoundException,
+  Patch,
   Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { always, identity } from 'ramda';
+import { identity } from 'ramda';
 import { Cabinet } from './documents/cabinet.document';
 import { ResolvedCabinet } from './interfaces/ResolvedCabinet.interface';
 import { CabinetStore } from './cabinet.store';
@@ -17,7 +18,9 @@ import { RecipeStore } from '../recipes/recipe.store';
 import { IRecipeStore } from '../recipes/interfaces/recipe.store.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateCabinetDTO } from './dtos/update-cabinet.dto';
+import { UpdateFavouritesDTO } from './dtos/update-favourites.dto';
 import { resolveCabinet } from './resolve-cabinet';
+import { User } from '../users/documents/user.document';
 
 @Controller('cabinet')
 export class CabinetController {
@@ -30,7 +33,9 @@ export class CabinetController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getCabinetForOwner(@Request() req): Promise<ResolvedCabinet> {
+  async getCabinetForOwner(
+    @Request() req: { user: User },
+  ): Promise<ResolvedCabinet> {
     const { id } = req.user;
     const maybeCabinet = await this.cabinetStore.getForOwner(id);
     return (
@@ -54,7 +59,7 @@ export class CabinetController {
   @UseGuards(JwtAuthGuard)
   @Put()
   async updateCabinet(
-    @Request() req,
+    @Request() req: { user: User },
     @Body() updateCabinetDTO: UpdateCabinetDTO,
   ): Promise<Cabinet> {
     const { id } = req.user;
@@ -62,8 +67,31 @@ export class CabinetController {
       id,
       updateCabinetDTO,
     );
-    return maybeCabinet.matchAsync(always(id), () => {
+    return maybeCabinet.match(identity, () => {
       throw new NotFoundException();
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('favourites')
+  updateFavourites(
+    @Request() req: { user: User },
+    @Body() updateFavouritesDTO: UpdateFavouritesDTO,
+  ): Promise<Cabinet> {
+    const { user } = req;
+    const { id, action } = updateFavouritesDTO;
+    return this.recipeStore.findById(id).then((mRecipe) =>
+      mRecipe
+        .chainAsync((r) =>
+          action === 'add'
+            ? this.cabinetStore.addToFavourites(user.id, r.id)
+            : this.cabinetStore.removeFromFavourites(user.id, r.id),
+        )
+        .then((m) =>
+          m.match(identity, () => {
+            throw new NotFoundException(`No recipe with id ${id}`);
+          }),
+        ),
+    );
   }
 }
