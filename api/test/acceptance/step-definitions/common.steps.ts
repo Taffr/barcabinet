@@ -41,6 +41,10 @@ Given(
   },
 );
 
+Given('I am logged out', function (this: AcceptanceWorld) {
+  this.token = '';
+});
+
 Then('I get denied', function (this: AcceptanceWorld) {
   expect(this.response.code).to.equal(401);
 });
@@ -52,3 +56,10 @@ Then('I get a validation error', function (this: AcceptanceWorld) {
 Then('I get an authentication error', function (this: AcceptanceWorld) {
   expect(this.response.code).to.be.equal(401);
 });
+
+Then(
+  "I am informed that the resource doesn't exist",
+  function (this: AcceptanceWorld) {
+    expect(this.response.code).to.be.equal(404);
+  },
+);

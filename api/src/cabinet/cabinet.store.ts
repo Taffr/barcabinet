@@ -64,4 +64,26 @@ export class CabinetStore implements ICabinetStore {
       return this.updateForOwner(ownerId, newCabinet);
     });
   }
+
+  async addToIngredients(ownerId: string, ingredientId: number) {
+    const maybeCurrentCabinet = await this.getForOwner(ownerId);
+    return maybeCurrentCabinet.chainAsync((cabinet) => {
+      const currentIngredients = cabinet.currentIngredients;
+      const withAdded = includes(ingredientId, currentIngredients)
+        ? currentIngredients
+        : append(ingredientId, currentIngredients);
+      const newCabinet = { ...cabinet, favourites: withAdded };
+      return this.updateForOwner(ownerId, newCabinet);
+    });
+  }
+
+  async removeFromIngredients(ownerId: string, ingredientId: number) {
+    const maybeCurrentCabinet = await this.getForOwner(ownerId);
+    return maybeCurrentCabinet.chainAsync((cabinet) => {
+      const currentIngredients = cabinet.ingredients;
+      const withRemoved = reject(equals(ingredientId), currentIngredients);
+      const newCabinet = { ...cabinet, ingredients: withRemoved };
+      return this.updateForOwner(ownerId, newCabinet);
+    });
+  }
 }

@@ -11,4 +11,12 @@ export interface ICabinetStore {
     ownerId: string,
     recipeId: string,
   ): Promise<Maybe<Cabinet>>;
+  addToIngredients(
+    ownerId: string,
+    ingredientId: number,
+  ): Promise<Maybe<Cabinet>>;
+  removeFromIngredients(
+    ownerId: string,
+    ingredientId: number,
+  ): Promise<Maybe<Cabinet>>;
 }

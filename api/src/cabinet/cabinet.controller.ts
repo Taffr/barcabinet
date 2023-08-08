@@ -9,7 +9,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { identity } from 'ramda';
+import { identity, isEmpty } from 'ramda';
 import { Cabinet } from './documents/cabinet.document';
 import { ResolvedCabinet } from './interfaces/ResolvedCabinet.interface';
 import { CabinetStore } from './cabinet.store';
@@ -19,6 +19,7 @@ import { IRecipeStore } from '../recipes/interfaces/recipe.store.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateCabinetDTO } from './dtos/update-cabinet.dto';
 import { UpdateFavouritesDTO } from './dtos/update-favourites.dto';
+import { UpdateIngredientsDTO } from './dtos/update-ingredients.dto';
 import { resolveCabinet } from './resolve-cabinet';
 import { User } from '../users/documents/user.document';
 
@@ -93,5 +94,27 @@ export class CabinetController {
           }),
         ),
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('ingredients')
+  async updateIngredients(
+    @Request() req: { user: User },
+    @Body() updateIngredientsDTO: UpdateIngredientsDTO,
+  ): Promise<Cabinet> {
+    const { user } = req;
+    const { id, action } = updateIngredientsDTO;
+    const recipesWithIngredients =
+      await this.recipeStore.getContainingIngredientId(id);
+    if (isEmpty(recipesWithIngredients)) {
+      throw new NotFoundException(`No ingredient with id: ${id}`);
+    }
+    return (
+      await (action === 'add'
+        ? this.cabinetStore.addToIngredients(user.id, id)
+        : this.cabinetStore.removeFromIngredients(user.id, id))
+    ).match(identity, () => {
+      throw new NotFoundException(`No cabinet found`);
+    });
   }
 }

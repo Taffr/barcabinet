@@ -131,3 +131,29 @@ When(
     );
   },
 );
+
+When(
+  'I add the ingredient with id {string} to my cabinet',
+  async function (this: AcceptanceWorld, id: string) {
+    const PATH = '/cabinet/ingredients';
+    await this.handleResponse(
+      request(this.app.getHttpServer())
+        .patch(PATH)
+        .send({ id: Number(id), action: 'add' })
+        .set('Authorization', `Bearer ${this.token}`),
+    );
+  },
+);
+
+When(
+  'I remove the ingredient with id {string} from my cabinet',
+  async function (this: AcceptanceWorld, id: string) {
+    const PATH = '/cabinet/ingredients';
+    await this.handleResponse(
+      request(this.app.getHttpServer())
+        .patch(PATH)
+        .send({ id: Number(id), action: 'remove' })
+        .set('Authorization', `Bearer ${this.token}`),
+    );
+  },
+);
