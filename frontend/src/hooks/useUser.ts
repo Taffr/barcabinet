@@ -1,27 +1,52 @@
 import {
-  useSelector
+  useDispatch,
+  useSelector,
 } from 'react-redux'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
 import { prop } from 'ramda'
+import { httpClient } from '../common/http/http-client'
 import type { User } from '../interfaces/user.interface'
 
-
-type useUserReturn =
-  { isLoggedIn: true, user: User } | { isLoggedIn: false, user: undefined }
+type useUserReturn = {
+  isLoading: boolean,
+  user: User | undefined
+}
 
 export const useUser = (): useUserReturn => {
-  const user = useSelector(prop('user')) as User | undefined
+  const dispatch = useDispatch()
+  const token = localStorage.getItem('access_token')
+  const cachedUser = useSelector(prop('user'))
+  const [ user, setUser ] = useState<User | undefined>(cachedUser)
 
-  const isLoggedIn = user !== undefined
-
-  if (isLoggedIn) {
-    return {
-      user,
-      isLoggedIn,
+  const fetchUser = async () => {
+    if (user !== undefined) {
+     return user
     }
+    if (!token) {
+      return undefined
+    }
+    const { data } = await httpClient.get<User>('/profile')
+    return data
   }
 
-  return {
-    user: undefined,
-    isLoggedIn
+  const onSuccess = (user: User | undefined) => {
+    if (user !== undefined) {
+      dispatch({ type: 'user/userLoggedIn', payload: user })
+    }
+    setUser(user)
   }
+
+  const onError = () => {
+    setUser(undefined)
+    localStorage.removeItem('access_token')
+  }
+
+  const { isLoading } = useQuery('profile', fetchUser, {
+    onSuccess,
+    onError,
+    retry: 0,
+  })
+
+  return { user, isLoading }
 }

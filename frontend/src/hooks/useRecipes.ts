@@ -8,7 +8,7 @@ import {
   useDispatch,
   useSelector,
 } from 'react-redux'
-import axios from 'axios'
+import { httpClient } from '../common/http/http-client'
 import {
   isEmpty,
   prop,
@@ -24,9 +24,7 @@ export const useRecipes = () => {
     if (!isEmpty(recipes)) {
       return recipes
     }
-    const { data } = await axios.get<Recipe[]>(
-      `${import.meta.env.VITE_BARCABINET_API_URL}/recipes`
-    )
+    const { data } = await httpClient.get<Recipe[]>('/recipes')
     return data
   }
 
