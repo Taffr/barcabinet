@@ -68,11 +68,11 @@ export class CabinetStore implements ICabinetStore {
   async addToIngredients(ownerId: string, ingredientId: number) {
     const maybeCurrentCabinet = await this.getForOwner(ownerId);
     return maybeCurrentCabinet.chainAsync((cabinet) => {
-      const currentIngredients = cabinet.currentIngredients;
+      const currentIngredients = cabinet.ingredients;
       const withAdded = includes(ingredientId, currentIngredients)
         ? currentIngredients
         : append(ingredientId, currentIngredients);
-      const newCabinet = { ...cabinet, favourites: withAdded };
+      const newCabinet = { ...cabinet, ingredients: withAdded };
       return this.updateForOwner(ownerId, newCabinet);
     });
   }
