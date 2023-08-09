@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Recipe } from './documents/recipe.document';
 import { CollectionReference } from '@google-cloud/firestore';
-import { any, filter, head } from 'ramda';
+import { any, filter, head, isEmpty } from 'ramda';
 import { Maybe } from '../util/Maybe';
 import { IRecipeStore } from './interfaces/recipe.store.interface';
 
@@ -32,6 +32,9 @@ export class RecipeStore implements IRecipeStore {
   }
 
   findByIds(recipeIds) {
+    if (isEmpty(recipeIds)) {
+      return Promise.resolve([]);
+    }
     return this.recipeCollection
       .where('id', 'in', recipeIds)
       .get()
