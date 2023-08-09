@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import { isEmpty, prop } from 'ramda'
-import axios from 'axios'
+import { httpClient } from '../common/http/http-client'
 import type { Ingredient } from '../interfaces/ingredient.interface'
 
 export const useIngredients = () => {
@@ -14,9 +14,7 @@ export const useIngredients = () => {
     if (!isEmpty(ingredients)) {
       return ingredients
     }
-    const { data } = await axios.get<Ingredient[]>(
-      `${import.meta.env.VITE_BARCABINET_API_URL}/recipes/ingredients`
-    )
+    const { data } = await httpClient.get<Ingredient[]>('/recipes/ingredients')
     return data
   }
 

@@ -7,7 +7,11 @@ import {
 import {
   useNavigate
 } from 'react-router-dom'
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
+import { httpClient } from '../common/http/http-client'
+import {
+  requestAuthorizationInterceptorFactory
+} from '../common/http/request-interceptors'
 import {
   Button,
   LinearProgress,
@@ -47,15 +51,16 @@ export function Login () {
   const handleLoginSuccess = ({ data }: AxiosResponse) => {
     const { access_token } = data
     localStorage.setItem('access_token', access_token)
-    axios.get(`${import.meta.env.VITE_BARCABINET_API_URL}/profile`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`
-      }
-    })
-    .then(({ data }: AxiosResponse<User>) => {
-      dispatch({ type: 'user/userLoggedIn', payload: data })
-      navigate('/')
-    })
+
+    httpClient.interceptors.request.use(
+      requestAuthorizationInterceptorFactory(access_token),
+    )
+
+    httpClient.get('/profile')
+      .then(({ data }: AxiosResponse<User>) => {
+        dispatch({ type: 'user/userLoggedIn', payload: data })
+        navigate('/')
+      })
   }
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -77,7 +82,7 @@ export function Login () {
 
     setIsSigningIn(true)
     setMessage('Signing in ...')
-    axios.post(`${import.meta.env.VITE_BARCABINET_API_URL}/auth/login`, {
+    httpClient.post('/auth/login', {
       username,
       password,
     })
