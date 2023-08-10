@@ -1,15 +1,14 @@
-import { Reducer } from 'redux'
-import type { Ingredient } from '../interfaces/ingredient.interface'
+import { Reducer } from 'redux';
+import type { Ingredient } from '../interfaces/ingredient.interface';
 
 export const ingredientReducer: Reducer = (
   state: Ingredient[] | undefined = undefined,
-  action
+  action,
 ) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'ingredients/ingredientsFetched':
-      return action.payload
+      return action.payload;
     default:
-      return state
+      return state;
   }
-}
-
+};

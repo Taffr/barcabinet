@@ -10,8 +10,6 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': 'warn',
-    'no-extra-semi': 'error',
-    'semi': [ 'error', 'never' ],
     'no-await-in-loop': 'error',
     'no-confusing-arrow': 'error',
     'prefer-template': 'error',
@@ -23,10 +21,8 @@ module.exports = {
     'prefer-destructuring': 'error',
     'prefer-const': 'error',
     'arrow-parens': 'error',
-    'max-len': [ 'error', { 'code': 80 } ],
-    'no-extra-parens': 'error',
+    'max-len': [ 'error', { 'code': 100 } ],
     'no-trailing-spaces': 'error',
     'quotes': [ 'error', 'single'],
-    'space-before-function-paren': 'error',
   },
 }
