@@ -17,12 +17,14 @@ export const useUser = (): useUserReturn => {
   const [user, setUser] = useState<User | undefined>(cachedUser);
 
   const fetchUser = async () => {
-    if (user !== undefined) {
-      return user;
-    }
     if (!token) {
       return undefined;
     }
+
+    if (user !== undefined) {
+      return user;
+    }
+
     const { data } = await httpClient.get<User>('/profile');
     return data;
   };

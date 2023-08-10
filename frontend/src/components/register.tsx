@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import {
   Button,
   LinearProgress,
@@ -9,31 +8,37 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { isEmpty } from 'ramda';
-
-import type { User } from '../interfaces/user.interface';
+import { isEmpty, mergeLeft } from 'ramda';
+import { httpClient } from '../common/http/http-client';
+import { requestAuthorizationInterceptorFactory } from '../common/http/request-interceptors';
 
 const ERRORS = {
   CONFLICT: 409,
 };
 
 export function Register() {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const [userInfo, setUserInfo] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({
+    username: false,
+    nameError: '',
+    password: false,
+  });
+  const [message, setMessage] = useState('');
+  const [isSigningIn, setSigningIn] = useState(false);
 
   const handleRegisterFailure = (error: AxiosError) => {
+    setSigningIn(false);
+    setMessage('');
+
     const { response } = error;
-    setIsSigningIn(false);
     switch (response?.status) {
       case ERRORS.CONFLICT:
-        setMessage('Name already in use');
-        setNameError(true);
+        console.log('setting set errors');
+        setErrors(
+          mergeLeft({ username: true, nameError: 'Name already in use' }),
+        );
         break;
       default:
         setMessage('Server error, please try again later');
@@ -42,52 +47,52 @@ export function Register() {
 
   const handleRegisterSuccess = (username: string, password: string) => () => {
     setMessage('Signing you in ...');
-    axios
-      .post(`${import.meta.env.VITE_BARCABINET_API_URL}/auth/login`, {
+    httpClient
+      .post('/auth/login', {
         username,
         password,
       })
       .then(({ data }: AxiosResponse) => {
         const { access_token } = data;
         localStorage.setItem('access_token', access_token);
-        axios
-          .get<User>(`${import.meta.env.VITE_BARCABINET_API_URL}/profile`, {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          })
-          .then(({ data }) => {
-            dispatch({ type: 'user/userLoggedIn', payload: data });
-            navigate('/');
-          });
+
+        httpClient.interceptors.request.use(
+          requestAuthorizationInterceptorFactory(access_token),
+        );
+        navigate('/');
       });
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    let anyError = false;
+    const { username, password } = userInfo;
+    const errorAccumulator = {
+      username: false,
+      nameError: '',
+      password: false,
+    };
 
-    if (isEmpty(name)) {
-      setNameError(true);
-      anyError = true;
+    if (isEmpty(username)) {
+      errorAccumulator.username = true;
+      errorAccumulator.nameError = 'Name cannot be empty';
     }
 
     if (isEmpty(password)) {
-      setPasswordError(true);
-      anyError = true;
+      errorAccumulator.password = true;
     }
 
-    if (anyError) return;
+    setErrors(mergeLeft(errorAccumulator));
+    if (errorAccumulator.username || errorAccumulator.password) return;
 
-    setIsSigningIn(true);
+    setSigningIn(true);
     setMessage('Registering ...');
-    axios
-      .post(`${import.meta.env.VITE_BARCABINET_API_URL}/register`, {
-        name,
+    httpClient
+      .post('/register', {
+        name: username,
         password,
       })
-      .then(handleRegisterSuccess(name, password))
+      .then(handleRegisterSuccess(username, password))
       .catch(handleRegisterFailure);
   };
 
@@ -98,24 +103,26 @@ export function Register() {
         <Stack direction="row" spacing={2}>
           <TextField
             label="Username"
-            error={nameError}
-            onChange={(e) => {
-              setName(e.target.value);
-              setNameError(false);
-            }}
+            error={errors.username}
+            helperText={errors.username ? errors.nameError : ''}
+            onChange={(e) =>
+              setUserInfo(mergeLeft({ username: e.target.value }))
+            }
           />
           <TextField
             label="Password"
             type="password"
-            error={passwordError}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setPasswordError(false);
-            }}
+            error={errors.password}
+            helperText={errors.password ? 'Password cannot be empty' : ''}
+            onChange={(e) =>
+              setUserInfo(mergeLeft({ password: e.target.value }))
+            }
           />
         </Stack>
         <Stack alignItems="right">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isSigningIn}>
+            Submit
+          </Button>
         </Stack>
       </form>
       <Typography>{message}</Typography>
