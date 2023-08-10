@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { AxiosError, AxiosResponse } from 'axios';
 import { httpClient } from '../common/http/http-client';
@@ -11,33 +10,30 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { isEmpty } from 'ramda';
-import type { User } from '../interfaces/user.interface';
+import { isEmpty, mergeLeft } from 'ramda';
 
 const ERRORS = {
   UNAUTHORIZED: 401,
 };
 
 export function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const [userInfo, setUserInfo] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({ username: false, password: false });
+  const [message, setMessage] = useState('');
+  const [isSigningIn, setSigningIn] = useState(false);
 
   const handleLoginFail = (error: AxiosError) => {
     const { response } = error;
-    setIsSigningIn(false);
     switch (response?.status) {
       case ERRORS.UNAUTHORIZED:
         setMessage('Username does not exist, or password is wrong');
         break;
       default:
-        setMessage('Server error, please try again later');
+        setMessage('Server error, please try again');
     }
+    setSigningIn(false);
   };
 
   const handleLoginSuccess = ({ data }: AxiosResponse) => {
@@ -47,36 +43,31 @@ export function Login() {
     httpClient.interceptors.request.use(
       requestAuthorizationInterceptorFactory(access_token),
     );
-
-    httpClient.get('/profile').then(({ data }: AxiosResponse<User>) => {
-      dispatch({ type: 'user/userLoggedIn', payload: data });
-      navigate('/');
-    });
+    navigate('/');
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
-    let anyError = false;
+    const { username, password } = userInfo;
+    const errorAccumulator = { username: false, password: false };
 
     if (isEmpty(username)) {
-      setNameError(true);
-      anyError = true;
+      errorAccumulator.username = true;
     }
 
     if (isEmpty(password)) {
-      setPasswordError(true);
-      anyError = true;
+      errorAccumulator.password = true;
     }
 
-    if (anyError) return;
+    setErrors(errorAccumulator);
+    if (errorAccumulator.username || errorAccumulator.password) return;
 
-    setIsSigningIn(true);
+    setSigningIn(true);
     setMessage('Signing in ...');
     httpClient
       .post('/auth/login', {
-        username,
-        password,
+        username: userInfo.username,
+        password: userInfo.password,
       })
       .then(handleLoginSuccess)
       .catch(handleLoginFail);
@@ -89,24 +80,26 @@ export function Login() {
         <Stack direction="row" spacing={2}>
           <TextField
             label="Username"
-            error={nameError}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              setNameError(false);
-            }}
+            error={errors.username}
+            helperText={errors.username ? 'Name cannot be empty' : ''}
+            onChange={(e) =>
+              setUserInfo(mergeLeft({ username: e.target.value }))
+            }
           />
           <TextField
             label="Password"
             type="password"
-            error={passwordError}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setPasswordError(false);
-            }}
+            error={errors.password}
+            helperText={errors.password ? 'Password cannot be empty' : ''}
+            onChange={(e) =>
+              setUserInfo(mergeLeft({ password: e.target.value }))
+            }
           />
         </Stack>
         <Stack alignItems="right">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isSigningIn}>
+            Submit
+          </Button>
         </Stack>
       </form>
       <Typography>{message}</Typography>
