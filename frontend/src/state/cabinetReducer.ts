@@ -1,62 +1,57 @@
-import { AnyAction, Reducer } from 'redux'
-import {
-  append,
-  equals,
-  includes,
-  reject,
-} from 'ramda'
-import type { ResolvedCabinet } from '../interfaces/resolved-cabinet.interface'
+import { AnyAction, Reducer } from 'redux';
+import { append, equals, includes, reject } from 'ramda';
+import type { ResolvedCabinet } from '../interfaces/resolved-cabinet.interface';
 
 export const cabinetReducer: Reducer = (
   state: ResolvedCabinet = { favourites: [], ingredients: [] },
   action: AnyAction,
 ) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'cabinet/cabinetResolved': {
       return {
         ...state,
         ...action.payload,
-      }
+      };
     }
-    case 'cabinet/favouriteAdded' : {
-      const currentFavourites = state.favourites
-      const alreadyInFavourites = includes(action.payload, currentFavourites)
+    case 'cabinet/favouriteAdded': {
+      const currentFavourites = state.favourites;
+      const alreadyInFavourites = includes(action.payload, currentFavourites);
       const withAdded = alreadyInFavourites
         ? currentFavourites
-        : append(action.payload, currentFavourites)
+        : append(action.payload, currentFavourites);
 
       return {
         ...state,
-        favourites: withAdded
-      }
+        favourites: withAdded,
+      };
     }
-    case 'cabinet/favouriteRemoved' : {
-      const currentFavourites = state.favourites
+    case 'cabinet/favouriteRemoved': {
+      const currentFavourites = state.favourites;
       return {
         ...state,
-        favourites: reject(equals(action.payload), currentFavourites)
-      }
+        favourites: reject(equals(action.payload), currentFavourites),
+      };
     }
-    case 'cabinet/ingredientAdded' : {
-      const currentIngredients = state.ingredients
-      const alreadyInIngredients = includes(action.payload, currentIngredients)
+    case 'cabinet/ingredientAdded': {
+      const currentIngredients = state.ingredients;
+      const alreadyInIngredients = includes(action.payload, currentIngredients);
       const withAdded = alreadyInIngredients
         ? currentIngredients
-        : append(action.payload, currentIngredients)
+        : append(action.payload, currentIngredients);
 
       return {
         ...state,
-        ingredients: withAdded
-      }
+        ingredients: withAdded,
+      };
     }
-    case 'cabinet/ingredientRemoved' : {
-      const currentingredients = state.ingredients
+    case 'cabinet/ingredientRemoved': {
+      const currentingredients = state.ingredients;
       return {
         ...state,
-        ingredients: reject(equals(action.payload), currentingredients)
-      }
+        ingredients: reject(equals(action.payload), currentingredients),
+      };
     }
     default:
-      return state
+      return state;
   }
-}
+};
