@@ -3,7 +3,6 @@ import { ConflictException } from '@nestjs/common';
 import { RegisterController } from './register.controller';
 import { UserStore } from '../users/user.store';
 import { IUserStore } from '../users/interfaces/user.store.interface';
-import { CabinetStore } from '../cabinet/cabinet.store';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
 import { User } from '../users/documents/user.document';
@@ -34,10 +33,6 @@ describe('RegisterController', () => {
         {
           provide: UserStore,
           useValue: mockUserStore,
-        },
-        {
-          provide: CabinetStore,
-          useValue: mockCabinetStore,
         },
         CryptoService,
       ],

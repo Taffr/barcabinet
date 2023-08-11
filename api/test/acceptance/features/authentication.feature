@@ -1,3 +1,4 @@
+@authentication
 Feature: Authentication
   Background:
     Given the following users exists

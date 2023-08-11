@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { RegisterModule } from './register/register.module';
-import { CabinetModule } from './cabinet/cabinet.module';
 
 @Module({
   providers: [
@@ -34,7 +33,6 @@ import { CabinetModule } from './cabinet/cabinet.module';
     UsersModule,
     CryptoModule,
     RegisterModule,
-    CabinetModule,
   ],
 })
 export class AppModule {}

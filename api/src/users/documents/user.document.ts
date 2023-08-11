@@ -4,4 +4,6 @@ export class User {
   id: string;
   name: string;
   hash: string;
+  favourites: string[];
+  cabinet: number[];
 }

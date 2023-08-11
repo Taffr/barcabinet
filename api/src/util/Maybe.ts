@@ -45,6 +45,18 @@ export class Maybe<T> {
     return ifJustFn(this.value);
   }
 
+  zip<A>(other: Maybe<A>): Maybe<[T, A]> {
+    if (this.type === MaybeType.Nothing) {
+      return Maybe.nothing();
+    }
+    return Maybe.of(
+      other.match(
+        (a: A) => [this.value, a],
+        () => undefined,
+      ),
+    );
+  }
+
   async mapAsync<B>(f: (val: T) => Promise<B>): Promise<Maybe<B>> {
     if (this.type === MaybeType.Nothing) {
       return Maybe.nothing();
@@ -58,7 +70,6 @@ export class Maybe<T> {
     }
     return f(this.value);
   }
-
   async matchAsync<A, B>(
     ifJustFn: (val: T) => Promise<A>,
     ifNothingFn: () => Promise<B>,
