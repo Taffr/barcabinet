@@ -12,9 +12,9 @@ export class RecipeStore implements IRecipeStore {
     private recipeCollection: CollectionReference<Recipe>,
   ) {}
 
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  add(r): Promise<string> {
-    throw new Error('Not implemented!');
+  async add(r: Recipe): Promise<string> {
+    const ref = await this.recipeCollection.add(r);
+    return ref.id;
   }
 
   getAll() {
@@ -35,10 +35,9 @@ export class RecipeStore implements IRecipeStore {
     if (isEmpty(recipeIds)) {
       return Promise.resolve([]);
     }
-    return this.recipeCollection
-      .where('id', 'in', recipeIds)
-      .get()
-      .then((ss) => ss.docs.map((d) => d.data()));
+    return this.getAll().then((all) =>
+      all.filter((r) => recipeIds.includes(r.id)),
+    );
   }
 
   getContainingIngredientId(ingredientId) {

@@ -1,5 +1,5 @@
+@registration
 Feature: Registration
-
   Scenario: Username already taken
     Given the following users exists
       | id | name  | password  |

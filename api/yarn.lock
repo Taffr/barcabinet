@@ -2959,6 +2959,11 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
+fiery-firebase-memory@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fiery-firebase-memory/-/fiery-firebase-memory-1.0.0.tgz#07d6437dc94b813db9e4308a0df3319ae4cf9a0a"
+  integrity sha512-4aFnqsW7xgEHF+Mx5pCIUoiPC9/UHcF8669wObU2Mti0HGpSYK2L8a5HvegGsakeF/zSlurn2xlRGTc8wHvn6w==
+
 figures@^3.0.0, figures@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"

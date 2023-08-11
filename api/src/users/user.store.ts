@@ -11,18 +11,17 @@ export class UserStore implements IUserStore {
     private userCollection: CollectionReference<User>,
   ) {}
 
-  add(u) {
+  async add(u: User) {
     return this.userCollection
       .add(u)
       .then((ref) => ref.get())
       .then((ss) => ss.data().id);
   }
 
-  async findByName(nameToFind) {
+  async findByName(nameToFind: string) {
     const usersWithName = await this.userCollection
       .where('name', '==', nameToFind)
       .get();
-
-    return getSafeFirst(await usersWithName.docs.map((doc) => doc.data()));
+    return getSafeFirst(usersWithName.docs.map((doc) => doc.data()));
   }
 }

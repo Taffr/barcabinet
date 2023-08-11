@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { AcceptanceWorld } from '../support/world';
 import { UserStore } from '../../../src/users/user.store';
 import { User } from '../../../src/users/documents/user.document';
-import { CabinetStore } from '../../../src/cabinet/cabinet.store';
 import { CryptoService } from '../../../src/crypto/crypto.service';
 
 When('I GET {string}', async function (this: AcceptanceWorld, route: string) {
@@ -21,23 +20,19 @@ Given(
   async function (this: AcceptanceWorld, dataTable: DataTable) {
     const cryptoService: CryptoService = this.app.get(CryptoService);
     const userStore: UserStore = this.app.get(UserStore);
-    const cabinetStore: CabinetStore = this.app.get(CabinetStore);
     const usersToRegister: User[] = await Promise.all(
       map(
         async (h) => ({
           id: h.id,
           name: h.name,
           hash: await cryptoService.hash(h.password),
+          favourites: [],
+          cabinet: [],
         }),
         dataTable.hashes(),
       ),
     );
-    await Promise.all(
-      chain(
-        (u) => [userStore.add(u), cabinetStore.addForUser(u.id)],
-        usersToRegister,
-      ),
-    );
+    await Promise.all(map((u) => userStore.add(u), usersToRegister));
   },
 );
 

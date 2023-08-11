@@ -12,6 +12,7 @@ Feature: Cabinet
       | name  | password  |
       | Alice | secret123 |
 
+  @cabinet/registeringCreatesNew
   Scenario: Registering a user creates an empty cabinet
     Given I register using the data
       | name  | password |
@@ -22,82 +23,36 @@ Feature: Cabinet
     When I GET "/cabinet"
     Then I get an empty cabinet
 
+  @cabinet/unauthenticated
   Scenario: GET cabinet of not authenticated
     Given I am logged out
     When I GET "/cabinet"
     Then I get an authentication error
 
+  @cabinet/empty
   Scenario: Success GET empty cabinet
     When I GET "/cabinet"
     Then I get the following cabinet
-      | ownerId | favourites | ingredients |
-      | 1       |            |             |
+      | cabinet |
 
-  Scenario: Fail PUT Cabinet, missing data
-    When I update my cabinet with missing data 
-    Then I get a validation error
-  
-  Scenario: Fail PUT Cabinet, bad data
-    When I update my cabinet with invalid data 
-    Then I get a validation error
-
-  @successPutCabinet
-  Scenario: Success PUT cabinet 
-    When I update my cabinet with the following 
-      | favourites | ingredients   |
-      | 0          | 1, 3          | 
-    And I GET "/cabinet" 
-    Then I get the following cabinet
-      | ownerId | favourites      | ingredients                  |
-      | 1       | (0:Gin & Tonic) | (1:Gin), (3:Hallands Fläder) |
-
-  @addNonExistingToFavourites
-  Scenario: Add non-existing recipe to favourites
-    When I add the recipe with id "7" to my favourites
-    Then I am informed that the resource doesn't exist
-
-  @addFavouriteToCabinet
-  Scenario: Add favourite to cabinet
-    When I add the recipe with id "0" to my favourites
-    And I add the recipe with id "0" to my favourites
-    And I GET "/cabinet" 
-    Then I get the following cabinet
-      | ownerId | favourites      | ingredients |
-      | 1       | (0:Gin & Tonic) |             |
-
-  @removeFavouriteFromCabinet
-  Scenario: Add to recipe to favourites
-    When I add the recipe with id "0" to my favourites
-    When I add the recipe with id "1" to my favourites
-    And I GET "/cabinet" 
-    Then I get the following cabinet
-      | ownerId | favourites                            | ingredients |
-      | 1       | (0:Gin & Tonic), (1:Hallands & Tonic) |             |
-    When I remove the recipe with id "1" from my favourites
-    And I GET "/cabinet" 
-    Then I get the following cabinet
-      | ownerId | favourites      | ingredients |
-      | 1       | (0:Gin & Tonic) |             |
-
-  @addNonExistingToIngredients
+  @cabinet/addNonExisting
   Scenario: Try adding nonexisting ingredient to cabinet
     When I add the ingredient with id "666" to my cabinet
     Then I am informed that the resource doesn't exist
 
-  @addIngredientToCabinet
+  @cabinet/add
   Scenario: Success with adding ingredient to favourites
     When I add the ingredient with id "1" to my cabinet
     And I add the ingredient with id "1" to my cabinet
     And I GET "/cabinet" 
     Then I get the following cabinet
-      | ownerId | favourites      | ingredients |
-      | 1       |                 | (1:Gin)     |
+      | cabinet |
+      | 1, Gin  |
 
-  @removeIngredientToCabinet
+  @cabinet/remove
   Scenario: Success with removing ingredient to favourites
     When I add the ingredient with id "1" to my cabinet
     When I remove the ingredient with id "1" from my cabinet
     And I GET "/cabinet" 
     Then I get the following cabinet
-      | ownerId | favourites      | ingredients |
-      | 1       |                 |             |
+      | cabinet |
