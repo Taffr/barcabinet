@@ -13,7 +13,7 @@ export const IngredientChip = ({ name, id }: Ingredient) => {
 
   return (
     <Chip
-      onClick={() => handler(id, name)}
+      onClick={() => handler(id)}
       variant={variant}
       label={name}
       color={color}
