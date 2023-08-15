@@ -1,9 +1,14 @@
-import { Reducer } from 'redux';
 import type { Ingredient } from '../interfaces/ingredient.interface';
 
-export const ingredientReducer: Reducer = (
-  state: Ingredient[] | undefined = undefined,
-  action,
+export type IngredientFetchedAction = {
+  type: 'ingredients/ingredientsFetched';
+  payload: Ingredient[];
+};
+
+export type IngredientAction = IngredientFetchedAction;
+export const ingredientReducer = (
+  state: Ingredient[] = [],
+  action: IngredientAction,
 ) => {
   switch (action.type) {
     case 'ingredients/ingredientsFetched':

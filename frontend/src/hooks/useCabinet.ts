@@ -1,59 +1,45 @@
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { always, prop } from 'ramda';
-import type { ApplicationState } from '../state/reducer';
+import { pluck, prop } from 'ramda';
+import { useUser } from './useUser';
 import { httpClient } from '../common/http/http-client';
-import type { ResolvedCabinet } from '../interfaces/resolved-cabinet.interface';
+import type { CabinetFetchedAction } from '../state/cabinetReducer';
+import type { ApplicationState } from '../state/reducer';
+import type { Ingredient } from '../interfaces/ingredient.interface';
 
 export const useCabinet = () => {
   const dispatch = useDispatch();
-  const { favourites, ingredients } = useSelector<
-    ApplicationState,
-    ResolvedCabinet
-  >(prop('cabinet'));
+  const { isSignedIn } = useUser();
+  const cabinet = useSelector<ApplicationState, number[]>(prop('cabinet'));
 
-  const fetchCabinet = async () => {
-    const { data } = await httpClient.get<ResolvedCabinet>('/cabinet');
-    return data;
+  const fetchCabinet = async (): Promise<number[]> => {
+    if(!isSignedIn) {
+      return cabinet;
+    }
+    const { data } = await httpClient.get<Pick<Ingredient, 'name' | 'id'>[]>('/cabinet');
+    return pluck('id', data);
   };
 
-  const onSuccess = (cabinet: ResolvedCabinet) => {
-    dispatch({ type: 'cabinet/cabinetResolved', payload: cabinet });
+  const onSuccess = (cabinet: number[]) => {
+    const action: CabinetFetchedAction = {
+      type: 'cabinet/cabinetFetched',
+      payload: cabinet,
+    };
+    dispatch(action);
   };
 
   const { isLoading } = useQuery('cabinet', fetchCabinet, {
     onSuccess,
-    onError: always(undefined),
+    onError: console.error,
     retry: false,
   });
 
-  const addToFavourites = (id: string, name: string) => {
-    dispatch({ type: 'cabinet/favouriteAdded', payload: { id, name } });
-    httpClient.patch('cabinet/favourites', { action: 'add', id });
-  };
-
-  const removeFromFavourites = (id: string, name: string) => {
-    dispatch({ type: 'cabinet/favouriteRemoved', payload: { id, name } });
-    httpClient.patch('cabinet/favourites', { action: 'remove', id });
-  };
-
-  const addToIngredients = (id: number, name: string) => {
-    dispatch({ type: 'cabinet/ingredientAdded', payload: { id, name } });
-    httpClient.patch('cabinet/ingredients', { action: 'add', id });
-  };
-
-  const removeFromIngredients = (id: number, name: string) => {
-    dispatch({ type: 'cabinet/ingredientRemoved', payload: { id, name } });
-    httpClient.patch('cabinet/ingredients', { action: 'remove', id });
-  };
+  const idSet = new Set(cabinet);
+  const isInCabinet = (id: number) => idSet.has(id);
 
   return {
     isLoading,
-    favourites,
-    addToFavourites,
-    removeFromFavourites,
-    ingredients,
-    addToIngredients,
-    removeFromIngredients,
+    cabinet,
+    isInCabinet,
   };
 };
