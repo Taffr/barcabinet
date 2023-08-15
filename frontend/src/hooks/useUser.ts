@@ -4,25 +4,17 @@ import { useQuery } from 'react-query';
 import { prop } from 'ramda';
 import { httpClient } from '../common/http/http-client';
 import type { User } from '../interfaces/user.interface';
+import type { UserLoggedInAction } from '../state/userReducer';
 
-type useUserReturn = {
-  isLoading: boolean;
-  user: User | undefined;
-};
-
-export const useUser = (): useUserReturn => {
+export const useUser = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('access_token');
-  const cachedUser = useSelector(prop('user'));
-  const [user, setUser] = useState<User | undefined>(cachedUser);
+  const user = useSelector(prop('user'));
+  const [ isSignedIn, setIsSignedIn ] = useState(false);
 
   const fetchUser = async () => {
     if (!token) {
       return undefined;
-    }
-
-    if (user !== undefined) {
-      return user;
     }
 
     const { data } = await httpClient.get<User>('/profile');
@@ -30,22 +22,25 @@ export const useUser = (): useUserReturn => {
   };
 
   const onSuccess = (user: User | undefined) => {
-    if (user !== undefined) {
-      dispatch({ type: 'user/userLoggedIn', payload: user });
+    if (!user) {
+      setIsSignedIn(false);
+      return;
     }
-    setUser(user);
+    const action: UserLoggedInAction = { type: 'user/userLoggedIn', payload: user };
+    dispatch(action);
+    setIsSignedIn(true);
   };
 
   const onError = () => {
-    setUser(undefined);
     localStorage.removeItem('access_token');
+    setIsSignedIn(false);
   };
 
   const { isLoading } = useQuery('profile', fetchUser, {
     onSuccess,
     onError,
-    retry: 0,
+    retry: false,
   });
 
-  return { user, isLoading };
+  return { user, isLoading, isSignedIn };
 };

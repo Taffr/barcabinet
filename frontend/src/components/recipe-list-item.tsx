@@ -1,10 +1,11 @@
 import { Card, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import { map, pluck } from 'ramda';
+import { map } from 'ramda';
 import type { Recipe } from '../interfaces/recipe.interface';
 import type { Ingredient } from '../interfaces/ingredient.interface';
 import { IngredientChip } from './ingredient-chip';
-import { useCabinet } from '../hooks/useCabinet';
+import { useFavourites } from '../hooks/useFavourites';
+import { useEditFavourites } from '../hooks/useEditFavourites';
 
 export const RecipeListItem = ({
   id,
@@ -12,9 +13,10 @@ export const RecipeListItem = ({
   ingredients,
   preparation,
 }: Recipe) => {
-  const { favourites, removeFromFavourites, addToFavourites } = useCabinet();
-  const favouriteIdSet = new Set(pluck('id', favourites));
-  const isFavourite = favouriteIdSet.has(id);
+  const { isInFavourites } = useFavourites();
+  const { addToFavourites, removeFromFavourites } = useEditFavourites();
+
+  const isFavourite = isInFavourites(id);
   const handler = isFavourite ? removeFromFavourites : addToFavourites;
   const icon = isFavourite ? <Favorite /> : <FavoriteBorder />;
 

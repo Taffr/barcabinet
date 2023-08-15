@@ -35,7 +35,6 @@ export function Register() {
     const { response } = error;
     switch (response?.status) {
       case ERRORS.CONFLICT:
-        console.log('setting set errors');
         setErrors(
           mergeLeft({ username: true, nameError: 'Name already in use' }),
         );

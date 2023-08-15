@@ -1,16 +1,15 @@
-import { pluck } from 'ramda';
 import { useCabinet } from '../hooks/useCabinet';
+import { useEditCabinet } from '../hooks/useEditCabinet';
 import type { Ingredient } from '../interfaces/ingredient.interface';
 import { Chip } from '@mui/material';
 
 export const IngredientChip = ({ name, id }: Ingredient) => {
-  const { ingredients, removeFromIngredients, addToIngredients } = useCabinet();
-
-  const ingrentIdSet = new Set(pluck('id', ingredients));
-  const isInCabinet = ingrentIdSet.has(id);
-  const variant = isInCabinet ? 'filled' : 'outlined';
-  const color = isInCabinet ? 'success' : 'default';
-  const handler = isInCabinet ? removeFromIngredients : addToIngredients;
+  const { isInCabinet } = useCabinet();
+  const { addToCabinet, removeFromCabinet } = useEditCabinet();
+  const inCabinet = isInCabinet(id);
+  const variant = inCabinet ? 'filled' : 'outlined';
+  const color = inCabinet ? 'success' : 'default';
+  const handler = inCabinet ? removeFromCabinet : addToCabinet;
 
   return (
     <Chip
