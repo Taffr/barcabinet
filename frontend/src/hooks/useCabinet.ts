@@ -13,10 +13,12 @@ export const useCabinet = () => {
   const cabinet = useSelector<ApplicationState, number[]>(prop('cabinet'));
 
   const fetchCabinet = async (): Promise<number[]> => {
-    if(!isSignedIn) {
+    if (!isSignedIn) {
       return cabinet;
     }
-    const { data } = await httpClient.get<Pick<Ingredient, 'name' | 'id'>[]>('/cabinet');
+    const { data } = await httpClient.get<Pick<Ingredient, 'name' | 'id'>[]>(
+      '/cabinet',
+    );
     return pluck('id', data);
   };
 

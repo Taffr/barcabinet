@@ -23,7 +23,10 @@ export const useUser = () => {
     if (!user) {
       return;
     }
-    const action: UserLoggedInAction = { type: 'user/userLoggedIn', payload: user };
+    const action: UserLoggedInAction = {
+      type: 'user/userLoggedIn',
+      payload: user,
+    };
     dispatch(action);
   };
 

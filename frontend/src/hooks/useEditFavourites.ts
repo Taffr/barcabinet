@@ -16,7 +16,7 @@ export const useEditFavourites = () => {
       payload: { id, name },
     };
     dispatch(action);
-    if(isSignedIn) {
+    if (isSignedIn) {
       httpClient.patch('favourites', { action: 'add', id });
     }
   };
@@ -27,7 +27,7 @@ export const useEditFavourites = () => {
       payload: { id, name },
     };
     dispatch(action);
-    if(isSignedIn) {
+    if (isSignedIn) {
       httpClient.patch('favourites', { action: 'remove', id });
     }
   };

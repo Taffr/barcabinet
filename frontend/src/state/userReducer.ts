@@ -1,8 +1,8 @@
 import type { User } from '../interfaces/user.interface';
 
 export type UserLoggedInAction = {
-  type: 'user/userLoggedIn',
-  payload: User,
+  type: 'user/userLoggedIn';
+  payload: User;
 };
 
 export type UserAction = UserLoggedInAction;

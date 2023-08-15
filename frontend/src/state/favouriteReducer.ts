@@ -1,11 +1,4 @@
-import {
-  append,
-  equals,
-  includes,
-  map,
-  pick,
-  reject,
-} from 'ramda';
+import { append, equals, includes, map, pick, reject } from 'ramda';
 import { Recipe } from '../interfaces/recipe.interface';
 
 export type Favourite = Pick<Recipe, 'name' | 'id'>;
