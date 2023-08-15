@@ -37,7 +37,7 @@ export const RecipeListItem = ({
         >
           {map(
             (i: Ingredient) => (
-              <IngredientChip {...i} />
+              <IngredientChip ingredient={i} />
             ),
             ingredients,
           )}

@@ -1,39 +1,34 @@
-import { Box, LinearProgress, Stack, Typography } from '@mui/material';
-import { map } from 'ramda';
-import { useIngredients } from '../hooks/useIngredients';
-import { IngredientChip } from './ingredient-chip';
+import { useState } from 'react';
+import {
+  Box,
+  InputAdornment,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { FilterList } from '@mui/icons-material';
+import { IngredientCloud } from './ingredient-cloud';
 
 export function AllIngredients() {
-  const { isLoading, ingredients } = useIngredients();
-
+  const [searchTerm, setSearchTerm] = useState('');
   return (
-    <Stack spacing={5}>
-      {isLoading && (
-        <Stack spacing={5}>
-          <LinearProgress color="inherit" />
-          <Typography>Loading ingredients...</Typography>
-        </Stack>
-      )}
-      {!isLoading && (
-        <>
-          <Typography variant="h1">Ingredients</Typography>
-          <Box
-            gap={1}
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}
-          >
-            {map(
-              (i) => (
-                <IngredientChip {...i} />
-              ),
-              ingredients,
-            )}
-          </Box>
-        </>
-      )}
+    <Stack
+      spacing={4}
+    >
+      <Typography variant='h2'> Ingredients </Typography>
+        <TextField
+          variant="standard"
+          placeholder="Filter by name"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FilterList />
+              </InputAdornment>
+            ),
+          }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      <IngredientCloud nameFilter={searchTerm} />
     </Stack>
   );
 }
