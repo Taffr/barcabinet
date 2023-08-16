@@ -28,12 +28,7 @@ export const IngredientCloud = (props: { nameFilter: string }) => {
   }
 
   return (
-    <Box
-      gap={1}
-      display='flex'
-      flexWrap='wrap'
-      justifyContent='center'
-    >
+    <Box gap={1} display="flex" flexWrap="wrap" justifyContent="center">
       {map(
         (i: Ingredient) => (
           <IngredientChip ingredient={i} highlight={nameFilter} />
