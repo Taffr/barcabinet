@@ -7,22 +7,33 @@ import {
   Stack,
   Switch,
 } from '@mui/material';
-import { BaseSyntheticEvent, useState } from 'react';
+import { useState } from 'react';
+import type { BaseSyntheticEvent } from 'react';
+import type { SelectChangeEvent } from '@mui/material';
 
-const SORTING_VALUES = {
-  NO_SORT: '',
-  NUM_ING_OWNED: 0,
-  NUM_ING_ASC: 1,
-  NUM_ING_DESC: 2,
-} as const;
+export enum SORT_MODES {
+  NO_SORT,
+  NUM_ING_OWNED_ASC,
+  NUM_ING_OWNED_DESC,
+  NUM_ING_ASC,
+  NUM_ING_DESC,
+}
+
+type Values<T> = T[keyof T];
+export type SortMode = Values<typeof SORT_MODES>;
 
 export const RecipeFilterControls = (props: {
   onFavouriteFilterToggled: (isSwitched: boolean) => void;
   onIngredientFilterToggled: (isSwitched: boolean) => void;
+  onSortingModeChanged: (mode: SortMode) => void;
 }) => {
-  const { onFavouriteFilterToggled, onIngredientFilterToggled } = props;
-  const [sortingValue, setSortingValue] = useState<number | string>(
-    SORTING_VALUES.NO_SORT,
+  const {
+    onFavouriteFilterToggled,
+    onIngredientFilterToggled,
+    onSortingModeChanged,
+  } = props;
+  const [sortingValue, setSortingValue] = useState<SortMode>(
+    SORT_MODES.NO_SORT,
   );
 
   const handleOnlyFavourites = (e: BaseSyntheticEvent) =>
@@ -30,6 +41,12 @@ export const RecipeFilterControls = (props: {
 
   const handleToggleExcludeIngredients = (e: BaseSyntheticEvent) =>
     onIngredientFilterToggled(e.target.checked);
+
+  const handleSortingChanged = (e: SelectChangeEvent) => {
+    const mode: SortMode = Number(e.target.value);
+    setSortingValue(mode);
+    onSortingModeChanged(mode);
+  };
 
   return (
     <Stack direction="row" spacing={12} justifyContent="center">
@@ -40,24 +57,25 @@ export const RecipeFilterControls = (props: {
           sx={{ width: '14vw' }}
           labelId="sorting-select-label-id"
           label="Sort By"
-          value={sortingValue}
-          onChange={(e) => setSortingValue(e.target.value)}
+          value={
+            sortingValue === SORT_MODES.NO_SORT ? '' : String(sortingValue)
+          }
+          onChange={handleSortingChanged}
         >
-          <MenuItem value={SORTING_VALUES.NO_SORT}>
-            {' '}
-            <em> None </em>{' '}
+          <MenuItem value={SORT_MODES.NO_SORT}>
+            <em> None </em>
           </MenuItem>
-          <MenuItem value={SORTING_VALUES.NUM_ING_OWNED}>
-            {' '}
-            # Ingredients owned{' '}
+          <MenuItem value={SORT_MODES.NUM_ING_OWNED_ASC}>
+            # Ingredients owned, ascending
           </MenuItem>
-          <MenuItem value={SORTING_VALUES.NUM_ING_ASC}>
-            {' '}
-            # Ingredients (ascending){' '}
+          <MenuItem value={SORT_MODES.NUM_ING_OWNED_DESC}>
+            # Ingredients owned, descending
           </MenuItem>
-          <MenuItem value={SORTING_VALUES.NUM_ING_DESC}>
-            {' '}
-            # Ingredients (descending){' '}
+          <MenuItem value={SORT_MODES.NUM_ING_ASC}>
+            # Ingredients, ascending
+          </MenuItem>
+          <MenuItem value={SORT_MODES.NUM_ING_DESC}>
+            # Ingredients, descending
           </MenuItem>
         </Select>
       </FormControl>

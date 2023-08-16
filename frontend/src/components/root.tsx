@@ -4,6 +4,7 @@ import { map } from 'ramda';
 import { ToggleThemeButton } from './ToggleThemeButton';
 
 type RouteInfo = { name: string; link: string };
+
 const RouterButtonWithDivider = ({ name, link }: RouteInfo) => (
   <Link to={link}>
     <ListItemButton

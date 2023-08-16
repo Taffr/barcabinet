@@ -9,7 +9,7 @@ import { useUser } from './useUser';
 export const useEditFavourites = () => {
   const dispatch = useDispatch();
   const { isSignedIn } = useUser();
-  // TODO: Use react-query here, and dispatch only on success.
+
   const addToFavourites = (id: string, name: string) => {
     const action: FavouriteAddedAction = {
       type: 'favourites/favouriteAdded',

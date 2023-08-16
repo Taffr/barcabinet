@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Box,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
 import { IngredientCloud } from './ingredient-cloud';
 
