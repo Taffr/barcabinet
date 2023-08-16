@@ -1,6 +1,6 @@
-import { LinearProgress, Stack, Typography } from '@mui/material';
-import { useReducer } from 'react';
-import { any, curry, reduce, map, pluck } from 'ramda';
+import { LinearProgress, List, Stack, Typography } from '@mui/material';
+import { useEffect, useReducer, useState } from 'react';
+import { add, any, curry, map, pluck, reduce, take } from 'ramda';
 import { useRecipes } from '../hooks/useRecipes';
 import { RecipeListItem } from './recipe-list-item';
 import { RecipeFilterControls } from './recipe-filter-controls';
@@ -13,6 +13,10 @@ type RecipeFilters = {
   excludeNotInCabinet: boolean;
 };
 
+const INITIAL_RECIPE_LIMIT = 20;
+const ON_SCROLL_RECIPE_INC = 5;
+
+const increaseRecipesShown = add(ON_SCROLL_RECIPE_INC);
 type ReducerState = { filteredRecipes: Recipe[]; filters: RecipeFilters };
 
 type ExcludeFilterAction = {
@@ -27,9 +31,31 @@ type ExcludeNonFavouriteFilterAction = {
 type FilterAction = ExcludeFilterAction | ExcludeNonFavouriteFilterAction;
 
 export const RecipeList = () => {
+  const [ showNumberRecipes, setShowNumberRecipes ] = useState(INITIAL_RECIPE_LIMIT);
   const { isLoading, recipes } = useRecipes();
   const { isInCabinet } = useCabinet();
   const { isInFavourites } = useFavourites();
+
+  const onScroll = () => {
+    const {
+      innerHeight: windowHeight,
+      scrollY: scrollPosition,
+    } = window;
+    const { documentElement: { scrollHeight: documentHeight } } = document;
+    const distanceToBottom = documentHeight - (scrollPosition + windowHeight);
+
+    if (distanceToBottom === 0) {
+      setShowNumberRecipes(increaseRecipesShown);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   const initialState: ReducerState = {
     filteredRecipes: recipes,
     filters: { excludeNotInCabinet: false, excludeNonFavourites: false },
@@ -102,13 +128,13 @@ export const RecipeList = () => {
         onFavouriteFilterToggled={(b) =>
           dispatch({ type: 'excludeNonFavourites', isToggled: b })
         }
-      />
-      {map(
-        (r) => (
-          <RecipeListItem {...r} />
-        ),
-        filteredRecipes,
-      )}
+    />
+        {map(
+          (r: Recipe) => (
+            <RecipeListItem {...r} />
+          ),
+          take(showNumberRecipes, filteredRecipes),
+        )}
     </Stack>
   );
 };
