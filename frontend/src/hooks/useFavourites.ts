@@ -9,14 +9,19 @@ import type {
 
 import type { Recipe } from '../interfaces/recipe.interface';
 import { httpClient } from '../common/http/http-client';
+import { useUser } from './useUser';
 
 export const useFavourites = () => {
   const dispatch = useDispatch();
+  const { isSignedIn } = useUser();
   const favourites = useSelector<ApplicationState, Favourite[]>(
     prop('favourites'),
   );
 
   const fetchFavourites = async () => {
+    if (!isSignedIn) {
+      return favourites;
+    }
     const { data } = await httpClient.get<Recipe[]>('/favourites');
     return data;
   };
