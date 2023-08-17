@@ -21,7 +21,10 @@ export const IngredientChip = (props: {
 
   return (
     <Chip
-      onClick={() => handler(id)}
+      onClick={(e) => {
+        e.stopPropagation();
+        handler(id);
+      }}
       variant={variant}
       label={<HighlightedTypography text={name} highlight={highlight} />}
       color={color}
