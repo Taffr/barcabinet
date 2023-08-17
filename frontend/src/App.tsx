@@ -13,6 +13,7 @@ import { Register } from './components/register';
 import { Home } from './components/home';
 import { AllIngredients } from './components/all-ingredients';
 import { AllRecipes } from './components/all-recipes';
+import { RecipeView } from './components/recipe-view';
 import { useMemo, useState } from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <Login />,
+      },
+      {
+        path: '/recipe/:id',
+        element: <RecipeView />,
       },
       {
         path: '/register',

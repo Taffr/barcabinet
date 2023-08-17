@@ -1,6 +1,6 @@
 export type Ingredient = {
   name: string;
   id: number;
-  dosage: number;
-  unit: string;
+  dosage?: number;
+  unit?: string;
 };

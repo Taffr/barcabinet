@@ -4,4 +4,5 @@ export type Recipe = {
   name: string;
   preparation: string;
   ingredients: Ingredient[];
+  garnish?: string;
 };
