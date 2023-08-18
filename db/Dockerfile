@@ -1,3 +1,5 @@
-FROM mongo:latest
-COPY init.js /docker-entrypoint-initdb.d/
-COPY cocktails_3.json /docker-entrypoint-initdb.d/cocktails.json
+FROM mysql:latest
+ADD schema.sql /docker-entrypoint-initdb.d/a_schema.sql
+ADD data.sql /docker-entrypoint-initdb.d/b_data.sql
+
+ENV MYSQL_DATABASE=cocktails

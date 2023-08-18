@@ -1,21 +1,14 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { v4 as uuidv4 } from 'uuid';
 
+
+const toTitleCase = (s) => s.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
 function main() {
   const oldRecipes = JSON.parse(readFileSync('./cocktails_2.0.json', 'utf-8'))
-
-  const allIngredients = [ ... new Set(oldRecipes.flatMap((r) => r.Ingredients).map((i) => i.Name)) ]
-  const ingredientFrequency = {}
-  
-  // oldRecipes
-  //   .flatMap((r) => r.Ingredients)
-  //   .forEach((i) => {
-  //     const curr = ingredientFrequency[i.Name]
-  //     ingredientFrequency[i.Name] = curr ? curr + 1 : 1
-  //   })
-
-  // const lowFrequency = Object.entries(ingredientFrequency).filter(([ key, value ]) => value < 3)
-  // console.dir(lowFrequency, { depth: null })
+    
+  const nonUniqueIngredients = oldRecipes.flatMap((r) => r.Ingredients).map((i) => toTitleCase(i.Name))
+  const allIngredients = [ ... new Set(nonUniqueIngredients) ]
   
   let counter = 0
   const ingredientNameIdMap = allIngredients.reduce((acc, iName) => {
@@ -27,8 +20,8 @@ function main() {
     const { Name, Preparation, Garnish, Ingredients } = r 
 
     const convertedIngredients = Ingredients.map((i) => ({
-      id: ingredientNameIdMap[i.Name],
-      name: i.Name,
+      id: ingredientNameIdMap[toTitleCase(i.Name)],
+      name: toTitleCase(i.Name),
       ...(i.Dosage && { dosage: i.Dosage }),
       ...(i.Unit && { unit: i.Unit }),
     }))
