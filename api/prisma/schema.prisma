@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Dosage {
+  recipeId     Int
+  ingredientId Int
+  amount       Float?     @db.Float
+  unit         String?    @db.Text
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Dosage_ibfk_1")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Dosage_ibfk_2")
+
+  @@id([recipeId, ingredientId])
+  @@index([ingredientId], map: "ingredientId")
+}
+
+model Favourite {
+  userId   Int
+  recipeId Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Favourite_ibfk_1")
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Favourite_ibfk_2")
+
+  @@id([userId, recipeId])
+  @@index([recipeId], map: "recipeId")
+}
+
+model Ingredient {
+  id               Int               @id
+  name             String            @unique(map: "name") @db.VarChar(255)
+  dosages          Dosage[]
+  savedIngredients SavedIngredient[]
+}
+
+model Recipe {
+  id           Int         @id
+  name         String      @unique(map: "name") @db.VarChar(255)
+  garnish      String?     @db.Text
+  preparation  String?     @db.Text
+  dosages      Dosage[]
+  favourites   Favourite[]
+}
+
+model SavedIngredient {
+  userId       Int
+  ingredientId Int
+  user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SavedIngredient_ibfk_1")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SavedIngredient_ibfk_2")
+
+  @@id([userId, ingredientId])
+  @@index([ingredientId], map: "ingredientId")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  name             String            @db.Text
+  hash             String            @db.Text
+  favourites       Favourite[]
+  savedIngredients SavedIngredient[]
+}

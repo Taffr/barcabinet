@@ -1,12 +1,12 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { RecipeModule } from './recipes/recipe.module';
-import { FirestoreModule } from './firestore/firestore.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { RegisterModule } from './register/register.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   providers: [
@@ -20,19 +20,12 @@ import { RegisterModule } from './register/register.module';
       envFilePath: ['.env.test', '.env.dev', '.env.prod'],
       isGlobal: true,
     }),
-    FirestoreModule.forRoot({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        projectId: configService.get<string>('PROJECT_ID'),
-        keyFilename: configService.get<string>('SA_KEY'),
-      }),
-      inject: [ConfigService],
-    }),
     RecipeModule,
     AuthModule,
     UsersModule,
     CryptoModule,
     RegisterModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}

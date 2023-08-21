@@ -1,16 +1,16 @@
 import { appendFileSync, readFileSync } from 'node:fs';
-import { map, pick, compose, uniq, pluck, prop, chain, curry, forEach } from 'ramda';
+import { map, compose, uniq, prop, chain, forEach } from 'ramda';
 const INPUT_FILE = './cocktails_3.json';
 const OUTPUT_FILE = './new_data.sql';
 
 const insertIngredientIntoTableString =
-    ({ id, name }) => `INSERT INTO ingredients (ingredient_id, name) VALUES (${id}, "${name}");\n`
+    ({ id, name }) => `INSERT INTO Ingredient (id, name) VALUES (${id}, "${name}");\n`
 
 const insertRecipeIntoTableString = (recipe) => {
     const { id, name, garnish, preparation } = recipe;
     const preparationString = preparation ? `"${preparation.replace(/"/g, "'")}"`: 'NULL';
     const garnishString = garnish ? `"${preparation.replace(/"/g, "'")}"`: 'NULL';
-    return `INSERT INTO recipes (recipe_id, name, garnish, preparation) VALUES (${id}, "${name}", ${garnishString}, ${preparationString});\n`;
+    return `INSERT INTO Recipe (id, name, garnish, preparation) VALUES (${id}, "${name}", ${garnishString}, ${preparationString});\n`;
 };
 
 const insertDosagesIntoTableStrings = (recipe) => {
@@ -18,7 +18,7 @@ const insertDosagesIntoTableStrings = (recipe) => {
     return map(({ id: ingredientId, unit, dosage }) => {
         const amountString = dosage ? dosage: 0;
         const unitString = unit ? `"${unit}"`: 'NULL';
-        return `INSERT INTO dosages (recipe_id, ingredient_id, amount, unit) VALUES (${recipeId}, ${ingredientId}, ${amountString}, ${unitString});\n`;
+        return `INSERT INTO Dosage (recipeId, ingredientId, amount, unit) VALUES (${recipeId}, ${ingredientId}, ${amountString}, ${unitString});\n`;
     }, ingredients)
 }
 

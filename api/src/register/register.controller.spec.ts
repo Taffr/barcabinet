@@ -1,29 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { RegisterController } from './register.controller';
 import { UserStore } from '../users/user.store';
-import { IUserStore } from '../users/interfaces/user.store.interface';
 import { CryptoService } from '../crypto/crypto.service';
 import { Maybe } from '../util/Maybe';
-import { User } from '../users/documents/user.document';
 
 describe('RegisterController', () => {
   let controller: RegisterController;
 
   let userAddedSpy: User | undefined;
 
-  const mockUserStore: IUserStore = {
-    findByName: (name) => {
+  const mockUserStore = {
+    findByName: (name: string) => {
       return Promise.resolve(Maybe.of(name == 'exists' ? { name } : undefined));
     },
-    add: (u) => {
+    add: (u: User) => {
       userAddedSpy = u;
       return Promise.resolve(u.id);
     },
-  };
-
-  const mockCabinetStore = {
-    addForUser: (id: string) => Promise.resolve(id),
   };
 
   beforeEach(async () => {

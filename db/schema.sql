@@ -2,58 +2,58 @@ CREATE DATABASE IF NOT EXISTS cocktails DEFAULT CHARACTER SET utf8 DEFAULT COLLA
 
 USE cocktails;
 
-DROP TABLE IF EXISTS recipes;
-CREATE TABLE IF NOT EXISTS recipes (
-  recipe_id INT NOT NULL,
+DROP TABLE IF EXISTS Recipe;
+CREATE TABLE IF NOT EXISTS Recipe (
+  id INT NOT NULL,
   name VARCHAR(255) NOT NULL UNIQUE,
   garnish TEXT,
   preparation TEXT,
-  PRIMARY KEY (recipe_id)
+  PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS ingredients;
-CREATE TABLE IF NOT EXISTS ingredients (
-  ingredient_id INT NOT NULL,
-  name VARCHAR(255) UNIQUE NOT NULL,
-  PRIMARY KEY (ingredient_id)
-);
-
-DROP TABLE IF EXISTS dosages;
-CREATE TABLE IF NOT EXISTS dosages (
-  recipe_id INT NOT NULL,
-  ingredient_id INT NOT NULL,
-  amount FLOAT,
-  unit TEXT,
-  PRIMARY KEY (recipe_id, ingredient_id),
-  FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
-  FOREIGN KEY (ingredient_id) REFERENCES ingredients(ingredient_id)
-);
-
-
-DROP TABLE IF EXISTS users;
-CREATE TABLE IF NOT EXISTS users (
-  user_id INT NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS User;
+CREATE TABLE IF NOT EXISTS User (
+  id INT NOT NULL AUTO_INCREMENT,
   name TEXT NOT NULL,
   hash TEXT NOT NULL,
-  PRIMARY KEY (user_id)
+  PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS favourites;
-CREATE TABLE IF NOT EXISTS favourites (
-  user_id INT NOT NULL,
-  recipe_id INT NOT NULL,
-  PRIMARY KEY(user_id, recipe_id),
-  FOREIGN KEY(user_id) REFERENCES users(user_id),
-  FOREIGN KEY(recipe_id) REFERENCES recipes(recipe_id)
+DROP TABLE IF EXISTS Ingredient;
+CREATE TABLE IF NOT EXISTS Ingredient (
+  id INT NOT NULL,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS user_ingredients;
-CREATE TABLE IF NOT EXISTS user_ingredients (
-  user_id INT NOT NULL,
-  ingredient_id INT NOT NULL,
-  PRIMARY KEY(user_id, ingredient_id),
-  FOREIGN KEY(user_id) REFERENCES users(user_id),
-  FOREIGN KEY(ingredient_id) REFERENCES ingredients(ingredient_id)
+DROP TABLE IF EXISTS Dosage;
+CREATE TABLE IF NOT EXISTS Dosage (
+  recipeId INT NOT NULL,
+  ingredientId INT NOT NULL,
+  amount FLOAT,
+  unit TEXT,
+  PRIMARY KEY (recipeId, ingredientId),
+  FOREIGN KEY (recipeId) REFERENCES Recipe(id),
+  FOREIGN KEY (ingredientId) REFERENCES Ingredient(id)
+);
+
+
+DROP TABLE IF EXISTS Favourite;
+CREATE TABLE IF NOT EXISTS Favourite (
+  userId INT NOT NULL,
+  recipeId INT NOT NULL,
+  PRIMARY KEY(userId, recipeId),
+  FOREIGN KEY(userId) REFERENCES User(id),
+  FOREIGN KEY(recipeId) REFERENCES Recipe(id)
+);
+
+DROP TABLE IF EXISTS SavedIngredient;
+CREATE TABLE IF NOT EXISTS SavedIngredient (
+  userId INT NOT NULL,
+  ingredientId INT NOT NULL,
+  PRIMARY KEY(userId, ingredientId),
+  FOREIGN KEY(userId) REFERENCES User(id),
+  FOREIGN KEY(ingredientId) REFERENCES Ingredient(id)
 );
 
 CREATE USER IF NOT EXISTS 'api_user'@'%' IDENTIFIED BY 'secret';

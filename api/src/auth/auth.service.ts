@@ -1,27 +1,26 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserStore } from '../users/user.store';
-import { IUserStore } from '../users/interfaces/user.store.interface';
+import { User } from '@prisma/client';
 import { CryptoService } from '../crypto/crypto.service';
-import { User } from '../users/documents/user.document';
+import { Maybe } from '../util/Maybe';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(UserStore)
-    private readonly userStore: IUserStore,
+    private readonly userStore: UserStore,
     private readonly jwtService: JwtService,
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async validateUser(name: string, incomingPassword: string) {
+  async validateUser(
+    name: string,
+    incomingPassword: string,
+  ): Promise<Maybe<User>> {
     const maybeUser = await this.userStore.findByName(name);
-    return maybeUser.mapAsync(async (user: User) => {
-      const { hash, ...rest } = user;
-      if (await this.cryptoService.compare(incomingPassword, hash)) {
-        return { user: rest };
-      }
-      return undefined;
+    return maybeUser.chainAsync(async (user: User) => {
+      const res = await this.cryptoService.compare(incomingPassword, user.hash);
+      return res ? Maybe.just(user) : Maybe.nothing();
     });
   }
 

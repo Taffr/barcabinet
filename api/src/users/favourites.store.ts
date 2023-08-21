@@ -1,54 +1,54 @@
-import { Injectable, Inject } from '@nestjs/common';
-import {
-  CollectionReference,
-  QueryDocumentSnapshot,
-} from '@google-cloud/firestore';
-import { prop, reject, equals, uniq } from 'ramda';
-import { IFavouritesStore } from './interfaces/favourites.store.interface';
-import { User } from './documents/user.document';
-import { getSafeFirst } from '../util/funcs';
+import { Injectable } from '@nestjs/common';
+import { pluck } from 'ramda';
+import { Favourite } from '@prisma/client';
 import { Maybe } from '../util/Maybe';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class FavouritesStore implements IFavouritesStore {
-  constructor(
-    @Inject(User.collectionName)
-    readonly userCollection: CollectionReference<User>,
-  ) {}
+export class FavouritesStore {
+  constructor(readonly prisma: PrismaService) {}
 
-  private async getUserSnapshot(
-    ownerId: string,
-  ): Promise<Maybe<QueryDocumentSnapshot>> {
-    const queryMatch = await this.userCollection
-      .where('id', '==', ownerId)
-      .get();
-    return getSafeFirst(queryMatch.docs);
+  async getFavouritesForUser(ownerId: number): Promise<number[]> {
+    const favourites = await this.prisma.favourite.findMany({
+      select: {
+        recipeId: true,
+      },
+      where: {
+        userId: ownerId,
+      },
+    });
+    return pluck('recipeId', favourites);
   }
 
-  async getFavouritesForUser(ownerId: string): Promise<Maybe<string[]>> {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef.map((ss) => ss.data()).map(prop('favourites'));
+  async addToUserFavourites(
+    userId: number,
+    recipeId: number,
+  ): Promise<Maybe<Favourite>> {
+    try {
+      const ret = await this.prisma.favourite.create({
+        data: {
+          recipeId,
+          userId,
+        },
+      });
+      return Maybe.of(ret);
+    } catch {
+      return Maybe.nothing();
+    }
   }
 
-  async addToUserFavourites(ownerId: string, recipeId: string) {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef
-      .mapAsync(async (ss) => {
-        const currentCabinet = prop('favourites', ss.data());
-        const withAdded = uniq([...currentCabinet, recipeId]);
-        await ss.ref.update({ favourites: withAdded });
-      })
-      .then(() => this.getFavouritesForUser(ownerId));
-  }
-
-  async removeFromUserFavourites(ownerId: string, recipeId: string) {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef
-      .mapAsync((ss) =>
-        ss.ref.update({
-          favourites: reject(equals(recipeId), prop('favourites', ss.data())),
-        }),
-      )
-      .then(() => this.getFavouritesForUser(ownerId));
+  async removeFromUserFavourites(
+    userId: number,
+    recipeId: number,
+  ): Promise<Maybe<Favourite>> {
+    const ret = await this.prisma.favourite.delete({
+      where: {
+        userId_recipeId: {
+          recipeId,
+          userId,
+        },
+      },
+    });
+    return Maybe.of(ret);
   }
 }
