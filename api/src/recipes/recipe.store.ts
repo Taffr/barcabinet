@@ -1,55 +1,103 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Recipe } from './documents/recipe.document';
-import { CollectionReference } from '@google-cloud/firestore';
-import { any, filter, head, isEmpty } from 'ramda';
+import { Injectable } from '@nestjs/common';
+import { Ingredient, Recipe } from '@prisma/client';
+import { map, prop } from 'ramda';
+import { PrismaService } from '../prisma/prisma.service';
 import { Maybe } from '../util/Maybe';
-import { IRecipeStore } from './interfaces/recipe.store.interface';
+import { ResolvedRecipe } from './interfaces/resolved-recipe.interface';
+
+type RecipeWithDosages = Recipe & { dosages: { ingredient: Ingredient }[] };
 
 @Injectable()
-export class RecipeStore implements IRecipeStore {
-  constructor(
-    @Inject(Recipe.collectionName)
-    private recipeCollection: CollectionReference<Recipe>,
-  ) {}
+export class RecipeStore {
+  constructor(readonly prisma: PrismaService) {}
+  private readonly FULL_RECIPE_QUERY = {
+    select: {
+      id: true,
+      name: true,
+      garnish: true,
+      preparation: true,
+      dosages: {
+        select: {
+          ingredient: true,
+        },
+      },
+    },
+  };
 
-  async add(r: Recipe): Promise<string> {
-    const ref = await this.recipeCollection.add(r);
-    return ref.id;
+  private mapToResolvedRecipe(full: RecipeWithDosages): ResolvedRecipe {
+    const { id, name, garnish, preparation, dosages } = full;
+
+    return {
+      id,
+      name,
+      garnish,
+      preparation,
+      ingredients: map(prop('ingredient'), dosages),
+    };
   }
 
-  getAll() {
-    return this.recipeCollection
-      .get()
-      .then((ss) => ss.docs.map((d) => d.data()));
+  async getAll(): Promise<ResolvedRecipe[]> {
+    const ret: RecipeWithDosages[] = await this.prisma.recipe.findMany(
+      this.FULL_RECIPE_QUERY,
+    );
+    return map(this.mapToResolvedRecipe, ret);
   }
 
-  findById(recipeId) {
-    return this.recipeCollection
-      .where('id', '==', recipeId)
-      .get()
-      .then((ss) => ss.docs.map((d) => d.data()))
-      .then((docs) => Maybe.of(head(docs)));
+  async findById(recipeId: number): Promise<Maybe<ResolvedRecipe>> {
+    const res = await this.prisma.recipe.findUnique({
+      ...this.FULL_RECIPE_QUERY,
+      where: { id: recipeId },
+    });
+    return Maybe.of(res).map(this.mapToResolvedRecipe);
   }
 
-  findByIds(recipeIds) {
-    if (isEmpty(recipeIds)) {
-      return Promise.resolve([]);
-    }
-    return this.getAll().then((all) =>
-      all.filter((r) => recipeIds.includes(r.id)),
+  async findByIds(recipeIds: number[]): Promise<ResolvedRecipe[]> {
+    return map(
+      this.mapToResolvedRecipe,
+      await this.prisma.recipe.findMany({
+        ...this.FULL_RECIPE_QUERY,
+        where: {
+          id: {
+            in: recipeIds,
+          },
+        },
+      }),
     );
   }
 
-  getContainingIngredientId(ingredientId) {
+  getContainingIngredientId(ingredientId: number): Promise<Recipe[]> {
     return this.getContainingIngredientIds([ingredientId]);
   }
 
-  getContainingIngredientIds(ingredientIds) {
-    const idsToFind = new Set(ingredientIds);
-    return this.getAll().then(
-      filter(({ ingredients }) =>
-        any(({ id }) => idsToFind.has(id), ingredients),
-      ),
+  async getContainingIngredientIds(ingredientIds: number[]): Promise<Recipe[]> {
+    return map(
+      this.mapToResolvedRecipe,
+      await this.prisma.recipe.findMany({
+        select: {
+          id: true,
+          name: true,
+          garnish: true,
+          preparation: true,
+          dosages: {
+            select: {
+              ingredient: true,
+            },
+          },
+        },
+        where: {
+          dosages: {
+            some: {
+              ingredientId: {
+                in: ingredientIds,
+              },
+            },
+          },
+        },
+      }),
     );
+  }
+
+  getAllIngredients(): Promise<Ingredient[]> {
+    return this.prisma.ingredient.findMany();
   }
 }

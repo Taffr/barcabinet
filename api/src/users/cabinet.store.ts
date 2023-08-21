@@ -1,54 +1,52 @@
-import { Injectable, Inject } from '@nestjs/common';
-import {
-  CollectionReference,
-  QueryDocumentSnapshot,
-} from '@google-cloud/firestore';
-import { prop, reject, equals, uniq } from 'ramda';
-import { ICabinetStore } from './interfaces/cabinet.store.interface';
-import { getSafeFirst } from '../util/funcs';
-import { User } from './documents/user.document';
+import { Injectable } from '@nestjs/common';
+import { pluck } from 'ramda';
+import { SavedIngredient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 import { Maybe } from '../util/Maybe';
 
 @Injectable()
-export class CabinetStore implements ICabinetStore {
-  constructor(
-    @Inject(User.collectionName)
-    private userCollection: CollectionReference<User>,
-  ) {}
+export class CabinetStore {
+  constructor(private readonly prisma: PrismaService) {}
 
-  private async getUserSnapshot(
-    ownerId: string,
-  ): Promise<Maybe<QueryDocumentSnapshot>> {
-    const queryMatch = await this.userCollection
-      .where('id', '==', ownerId)
-      .get();
-    return getSafeFirst(queryMatch.docs);
+  async getCabinetForUser(userId: number): Promise<number[]> {
+    const cabinet = await this.prisma.savedIngredient.findMany({
+      select: {
+        ingredientId: true,
+      },
+      where: {
+        userId,
+      },
+    });
+    return pluck('ingredientId', cabinet);
   }
 
-  async getCabinetForUser(ownerId: string): Promise<Maybe<number[]>> {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef.map((ss) => ss.data()).map(prop('cabinet'));
-  }
-
-  async addToUserCabinet(ownerId: string, ingredientId: number) {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef
-      .mapAsync(async (ss) => {
-        const currentCabinet = prop('cabinet', ss.data());
-        const withAdded = uniq([...currentCabinet, ingredientId]);
-        await ss.ref.update({ cabinet: withAdded });
-      })
-      .then(() => this.getCabinetForUser(ownerId));
-  }
-
-  async removeFromUserCabinet(ownerId: string, ingredientId: number) {
-    const maybeUserRef = await this.getUserSnapshot(ownerId);
-    return maybeUserRef
-      .mapAsync((ss) =>
-        ss.ref.update({
-          cabinet: reject(equals(ingredientId), prop('cabinet', ss.data())),
+  async addToUserCabinet(
+    userId: number,
+    ingredientId: number,
+  ): Promise<Maybe<SavedIngredient>> {
+    try {
+      return Maybe.of(
+        await this.prisma.savedIngredient.create({
+          data: { userId, ingredientId },
         }),
-      )
-      .then(() => this.getCabinetForUser(ownerId));
+      );
+    } catch {
+      return Maybe.nothing();
+    }
+  }
+
+  async removeFromUserCabinet(
+    userId: number,
+    ingredientId: number,
+  ): Promise<Maybe<SavedIngredient>> {
+    try {
+      return Maybe.of(
+        await this.prisma.savedIngredient.delete({
+          where: { userId_ingredientId: { userId, ingredientId } },
+        }),
+      );
+    } catch {
+      return Maybe.nothing();
+    }
   }
 }

@@ -6,7 +6,6 @@ const pool = mysql.createPool({
   user: 'api_user',
   password: 'secret',
   database: 'cocktails',
-  connectTimeout: 1000000,
 });
 
 console.log(await pool.execute('SELECT * FROM recipes;'))

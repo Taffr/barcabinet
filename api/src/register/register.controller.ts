@@ -1,20 +1,12 @@
-import {
-  Body,
-  ConflictException,
-  Controller,
-  Inject,
-  Post,
-} from '@nestjs/common';
+import { Body, ConflictException, Controller, Post } from '@nestjs/common';
 import { RegisterUserDTO } from './dtos/register-user.dto';
-import { IUserStore } from '../users/interfaces/user.store.interface';
 import { UserStore } from '../users/user.store';
 import { CryptoService } from '../crypto/crypto.service';
 
 @Controller('register')
 export class RegisterController {
   constructor(
-    @Inject(UserStore)
-    private readonly userStore: IUserStore,
+    private readonly userStore: UserStore,
     private readonly cryptoService: CryptoService,
   ) {}
 
@@ -28,11 +20,8 @@ export class RegisterController {
       },
       async () =>
         this.userStore.add({
-          id: this.cryptoService.uuid(),
-          hash: await this.cryptoService.hash(password),
           name,
-          favourites: [],
-          cabinet: [],
+          hash: await this.cryptoService.hash(password),
         }),
     );
   }

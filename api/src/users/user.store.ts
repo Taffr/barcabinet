@@ -1,27 +1,21 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CollectionReference } from '@google-cloud/firestore';
+import { Injectable } from '@nestjs/common';
+import { User, Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 import { getSafeFirst } from '../util/funcs';
-import { IUserStore } from './interfaces/user.store.interface';
-import { User } from './documents/user.document';
+import { Maybe } from '../util/Maybe';
 
 @Injectable()
-export class UserStore implements IUserStore {
-  constructor(
-    @Inject(User.collectionName)
-    private userCollection: CollectionReference<User>,
-  ) {}
+export class UserStore {
+  constructor(readonly prisma: PrismaService) {}
 
-  async add(u: User) {
-    return this.userCollection
-      .add(u)
-      .then((ref) => ref.get())
-      .then((ss) => ss.data().id);
+  async add(data: Prisma.UserCreateInput) {
+    return this.prisma.user.create({ data });
   }
 
-  async findByName(nameToFind: string) {
-    const usersWithName = await this.userCollection
-      .where('name', '==', nameToFind)
-      .get();
-    return getSafeFirst(usersWithName.docs.map((doc) => doc.data()));
+  async findByName(nameToFind: string): Promise<Maybe<User>> {
+    const users = await this.prisma.user.findMany({
+      where: { name: nameToFind },
+    });
+    return getSafeFirst(users);
   }
 }

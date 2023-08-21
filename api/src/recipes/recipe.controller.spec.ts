@@ -3,53 +3,60 @@ import { map } from 'ramda';
 import { Maybe } from '../util/Maybe';
 import { RecipeController } from './recipe.controller';
 import { RecipeStore } from './recipe.store';
-import { IRecipeStore } from './interfaces/recipe.store.interface';
-import { Recipe } from './documents/recipe.document';
+import { Recipe } from '@prisma/client';
 
 describe('RecipeController', () => {
   let recipeController: RecipeController;
 
-  const mockRecipeStore: IRecipeStore = {
-    add(doc: Recipe) {
-      return Promise.resolve(doc.id);
-    },
-
-    getAll() {
+  const mockRecipeStore = {
+    getAll(): Promise<Recipe[]> {
       const r = [
         {
+          id: 0,
           name: 'A Cocktail',
+          garnish: null,
+          preparation: 'prep',
         },
-      ] as Recipe[];
+      ];
       return Promise.resolve(r);
     },
 
-    findById(id) {
-      return Promise.resolve(Maybe.of(id));
+    findById(id: number): Promise<Maybe<Recipe>> {
+      const r: Recipe = {
+        id,
+        name: 'name',
+        garnish: null,
+        preparation: 'prep',
+      };
+      return Promise.resolve(Maybe.of(r));
     },
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    findByIds(ids) {
-      return Promise.resolve([]);
+    findByIds(ids: number[]) {
+      const recipes: Recipe[] = map(
+        (id) => ({
+          id,
+          name: 'a name',
+          garnish: null,
+          preparation: 'p',
+        }),
+        ids,
+      );
+      return Promise.resolve(recipes);
     },
 
-    getContainingIngredientId(ingredientId: number) {
-      return Promise.resolve([
-        {
-          name: 'Another Cocktail',
-          ingredients: [{ id: ingredientId }],
-        },
-      ] as Recipe[]);
+    getContainingIngredientId(ingredientId: number): Promise<Recipe[]> {
+      return this.getContainingIngredientIds([ingredientId]);
     },
 
-    getContainingIngredientIds(ingredientIds: number[]) {
+    getContainingIngredientIds(ingredientIds: number[]): Promise<Recipe[]> {
       return Promise.resolve(
         map(
-          (id) =>
-            ({
-              id: 'some id',
-              name: 'Another Cocktail',
-              ingredients: [{ id }],
-            } as Recipe),
+          (id) => ({
+            id: id + 1,
+            name: 'Another Cocktail',
+            garnish: null,
+            preparation: 'prep',
+          }),
           ingredientIds,
         ),
       );
@@ -74,13 +81,6 @@ describe('RecipeController', () => {
     it('should return all recipes', async () => {
       const res = await recipeController.getAll();
       expect(res.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('containingIngredient(id)', () => {
-    it('should return a recipe when asking for an ingredient', async () => {
-      const res = await recipeController.containingIngredient('0');
-      expect(res[0].ingredients.some(({ id }) => id === 0)).toBe(true);
     });
   });
 });

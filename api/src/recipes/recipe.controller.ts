@@ -1,14 +1,10 @@
-import { Controller, Inject, Get, Param } from '@nestjs/common';
-import { IRecipeStore } from './interfaces/recipe.store.interface';
+import { Controller, Get, Param } from '@nestjs/common';
 import { RecipeStore } from './recipe.store';
 import { Ingredient } from './interfaces/ingredient.interface';
 
 @Controller('recipes')
 export class RecipeController {
-  constructor(
-    @Inject(RecipeStore)
-    private readonly recipeStore: IRecipeStore,
-  ) {}
+  constructor(private readonly recipeStore: RecipeStore) {}
 
   @Get()
   async getAll() {
@@ -22,16 +18,6 @@ export class RecipeController {
 
   @Get('ingredients')
   async allIngredients(): Promise<Ingredient[]> {
-    const allRecipes = await this.recipeStore.getAll();
-    const allIngredients = allRecipes.flatMap(({ ingredients }) => ingredients);
-    const idSet = new Set<number>();
-    const uniqueIngredients = allIngredients.filter(({ id }) => {
-      if (idSet.has(id)) {
-        return false;
-      }
-      idSet.add(id);
-      return true;
-    });
-    return uniqueIngredients;
+    return this.recipeStore.getAllIngredients();
   }
 }

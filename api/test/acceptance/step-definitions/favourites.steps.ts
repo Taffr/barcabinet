@@ -1,28 +1,24 @@
 import { DataTable, Then, When } from '@cucumber/cucumber';
 import { assert } from 'chai';
-import { map } from 'ramda';
+import { pluck, prop } from 'ramda';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
+import { Recipe } from '@prisma/client';
 
 Then(
   'I get the following favourites',
   function (this: AcceptanceWorld, dataTable: DataTable) {
-    const parsed = map((h) => {
-      const raw = h.favourites;
-      const parts = raw.split(', ');
-      return { id: parts[0], name: parts[1] };
-    }, dataTable.hashes());
-    const expectedFavourites = parsed;
-    const resultFavourites = map(
-      (r) => ({ id: r.id, name: r.name }),
-      this.response.body,
-    );
-    assert.deepEqual(resultFavourites, expectedFavourites);
+    const expectedFavourites = dataTable
+      .hashes()
+      .map(prop('favourites'))
+      .map(Number);
+    const resultIds = pluck('id', this.response.body as Recipe[]);
+    assert.deepEqual(resultIds, expectedFavourites);
   },
 );
 
 When(
-  'I add the recipe with id {string} to my favourites',
+  'I add the recipe with id {int} to my favourites',
   async function (this: AcceptanceWorld, id: number) {
     const UPDATE_PATH = '/favourites';
     await this.handleResponse(
@@ -35,8 +31,8 @@ When(
 );
 
 When(
-  'I remove the recipe with id {string} from my favourites',
-  async function (this: AcceptanceWorld, id: string) {
+  'I remove the recipe with id {int} from my favourites',
+  async function (this: AcceptanceWorld, id: number) {
     const UPDATE_PATH = '/favourites';
     await this.handleResponse(
       request(this.app.getHttpServer())

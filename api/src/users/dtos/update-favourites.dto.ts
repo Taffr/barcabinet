@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsIn, IsString } from 'class-validator';
+import { IsNotEmpty, IsIn, IsNumber } from 'class-validator';
 
 const updateActions = ['add', 'remove'] as const;
 
 export type UpdateAction = (typeof updateActions)[number];
 
 export class UpdateFavouritesDTO {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  id: string;
+  id: number;
 
   @IsIn(updateActions)
   action: UpdateAction;

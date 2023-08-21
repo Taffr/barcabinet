@@ -9,11 +9,11 @@ export class Maybe<T> {
     private readonly type: MaybeType,
   ) {}
 
-  private static nothing() {
+  public static nothing() {
     return new Maybe(undefined, MaybeType.Nothing);
   }
 
-  private static just<T>(v: T) {
+  public static just<T>(v: T) {
     return new Maybe(v, MaybeType.Just);
   }
 

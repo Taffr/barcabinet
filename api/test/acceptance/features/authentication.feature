@@ -1,4 +1,4 @@
-@authentication
+@auth
 Feature: Authentication
   Background:
     Given the following users exists
@@ -6,6 +6,7 @@ Feature: Authentication
       | 1  | Alice | secret   |
       | 2  | Bob   | pwd123   |
 
+  @auth/badCredentials
   Scenario: Fail to login with bad credentials
     When I login with the following credentials
       | name  | password |
