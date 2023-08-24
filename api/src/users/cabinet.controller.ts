@@ -8,25 +8,25 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { isEmpty, prop } from 'ramda';
+import { User, Ingredient } from '@prisma/client';
+import { isEmpty, identity } from 'ramda';
 import { UpdateIngredientsDTO } from './dtos/update-ingredients.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CabinetStore } from './cabinet.store';
 import { RecipeStore } from '../recipes/recipe.store';
-import { User } from '@prisma/client';
+import { UserStore } from '../users/user.store';
 
 @Controller('cabinet')
 export class CabinetController {
   constructor(
-    readonly cabinetStore: CabinetStore,
+    readonly userStore: UserStore,
     readonly recipeStore: RecipeStore,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCabinetForUser(@Request() req: { user: User }): Promise<number[]> {
+  getCabinetForUser(@Request() req: { user: User }): Promise<Ingredient[]> {
     const { id } = req.user;
-    return this.cabinetStore.getCabinetForUser(id);
+    return this.userStore.getCabinetForUser(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -34,7 +34,7 @@ export class CabinetController {
   async updateIngredients(
     @Request() req: { user: User },
     @Body() updateIngredientsDTO: UpdateIngredientsDTO,
-  ): Promise<number> {
+  ): Promise<number[]> {
     const { user } = req;
     const { id, action } = updateIngredientsDTO;
     const recipesWithIngredients =
@@ -45,9 +45,9 @@ export class CabinetController {
     }
     return (
       action === 'add'
-        ? await this.cabinetStore.addToUserCabinet(user.id, id)
-        : await this.cabinetStore.removeFromUserCabinet(user.id, id)
-    ).match(prop('ingredientId'), () => {
+        ? await this.userStore.addToUserCabinet(user.id, id)
+        : await this.userStore.removeFromUserCabinet(user.id, id)
+    ).match(identity, () => {
       throw new ConflictException('Ingredient already in cabinet');
     });
   }

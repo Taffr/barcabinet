@@ -5,6 +5,9 @@ import { Test as stTest } from 'supertest';
 import { AppModule } from '../../../src/app.module';
 
 export class AcceptanceWorld extends World {
+  public ingredientNameIdMap = new Map<string, number>();
+  public recipeNameIdMap = new Map<string, number>();
+
   public app: NestApplication;
   public response: { code: number; body: any };
   public token: string;

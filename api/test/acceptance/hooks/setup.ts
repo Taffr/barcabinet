@@ -8,11 +8,15 @@ Before(async function () {
   await this.compileWorld();
 });
 
+/*
+ * Drop tables between tests,
+ * order matters to foreign and primary key constraints.
+ * */
 After(async function () {
   const prisma: PrismaService = this.app.get(PrismaService);
-  /* Drop tables between tests */
-  await prisma.favourite.deleteMany();
-  await prisma.savedIngredient.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.dosage.deleteMany();
+  await prisma.ingredient.deleteMany();
+  await prisma.recipe.deleteMany();
   await prisma.$disconnect();
 });

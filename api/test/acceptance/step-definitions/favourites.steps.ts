@@ -8,19 +8,17 @@ import { Recipe } from '@prisma/client';
 Then(
   'I get the following favourites',
   function (this: AcceptanceWorld, dataTable: DataTable) {
-    const expectedFavourites = dataTable
-      .hashes()
-      .map(prop('favourites'))
-      .map(Number);
-    const resultIds = pluck('id', this.response.body as Recipe[]);
-    assert.deepEqual(resultIds, expectedFavourites);
+    const expectedFavourites = dataTable.hashes().map(prop('favourites'));
+    const resultNames = pluck('name', this.response.body as Recipe[]);
+    assert.deepEqual(expectedFavourites, resultNames);
   },
 );
 
 When(
-  'I add the recipe with id {int} to my favourites',
-  async function (this: AcceptanceWorld, id: number) {
+  'I add {string} to my favourites',
+  async function (this: AcceptanceWorld, recipeName: string) {
     const UPDATE_PATH = '/favourites';
+    const id = this.recipeNameIdMap.get(recipeName) ?? 42069;
     await this.handleResponse(
       request(this.app.getHttpServer())
         .patch(UPDATE_PATH)
@@ -31,13 +29,13 @@ When(
 );
 
 When(
-  'I remove the recipe with id {int} from my favourites',
-  async function (this: AcceptanceWorld, id: number) {
+  'I remove {string} from my favourites',
+  async function (this: AcceptanceWorld, recipeName: string) {
     const UPDATE_PATH = '/favourites';
     await this.handleResponse(
       request(this.app.getHttpServer())
         .patch(UPDATE_PATH)
-        .send({ id, action: 'remove' })
+        .send({ id: this.recipeNameIdMap.get(recipeName), action: 'remove' })
         .set('Authorization', `Bearer ${this.token}`),
     );
   },

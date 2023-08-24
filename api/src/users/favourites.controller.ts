@@ -7,28 +7,21 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Recipe, User, Favourite } from '@prisma/client';
-import { identity } from 'ramda';
-import { RecipeStore } from '../recipes/recipe.store';
+import { Recipe, User } from '@prisma/client';
+import { prop } from 'ramda';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateFavouritesDTO } from './dtos/update-favourites.dto';
-import { FavouritesStore } from './favourites.store';
+import { UserStore } from '../users/user.store';
 
 @Controller('favourites')
 export class FavouritesController {
-  constructor(
-    private readonly favouritesStore: FavouritesStore,
-    private readonly recipeStore: RecipeStore,
-  ) {}
+  constructor(private readonly userStore: UserStore) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getFavouritesForUser(
-    @Request() req: { user: User },
-  ): Promise<Recipe[]> {
+  getFavouritesForUser(@Request() req: { user: User }): Promise<Recipe[]> {
     const { id } = req.user;
-    const favourites = await this.favouritesStore.getFavouritesForUser(id);
-    return this.recipeStore.findByIds(favourites);
+    return this.userStore.getFavouritesForUser(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -36,21 +29,16 @@ export class FavouritesController {
   async updateFavourites(
     @Request() req: { user: User },
     @Body() updateFavouritesDTO: UpdateFavouritesDTO,
-  ): Promise<Favourite> {
+  ): Promise<number[]> {
     const { user } = req;
     const { id, action } = updateFavouritesDTO;
-    const maybeRecipe = await this.recipeStore.findById(id);
 
-    return maybeRecipe
-      .chainAsync((r: Recipe) =>
-        action === 'add'
-          ? this.favouritesStore.addToUserFavourites(user.id, r.id)
-          : this.favouritesStore.removeFromUserFavourites(user.id, r.id),
-      )
-      .then((m) =>
-        m.match(identity, () => {
-          throw new NotFoundException();
-        }),
-      );
+    return (
+      action === 'add'
+        ? await this.userStore.addToUserFavourites(user.id, id)
+        : await this.userStore.removeFromUserFavourites(user.id, id)
+    ).match(prop('favourites'), () => {
+      throw new NotFoundException();
+    });
   }
 }

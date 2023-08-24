@@ -1,75 +1,76 @@
 -- CreateTable
-CREATE TABLE `Dosage` (
-    `recipeId` INTEGER NOT NULL,
-    `ingredientId` INTEGER NOT NULL,
-    `amount` FLOAT NULL,
-    `unit` TEXT NULL,
-
-    INDEX `ingredientId`(`ingredientId`),
-    PRIMARY KEY (`recipeId`, `ingredientId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Favourite` (
-    `userId` INTEGER NOT NULL,
-    `recipeId` INTEGER NOT NULL,
-
-    INDEX `recipeId`(`recipeId`),
-    PRIMARY KEY (`userId`, `recipeId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Ingredient` (
-    `id` INTEGER NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `name`(`name`),
+    UNIQUE INDEX `Ingredient_name_key`(`name`),
     PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Dosage` (
+    `ingredientId` INTEGER NOT NULL,
+    `recipeId` INTEGER NOT NULL,
+    `unit` VARCHAR(191) NULL,
+    `amount` DOUBLE NULL,
+
+    PRIMARY KEY (`ingredientId`, `recipeId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Recipe` (
-    `id` INTEGER NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
-    `garnish` TEXT NULL,
-    `preparation` TEXT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `garnish` VARCHAR(191) NULL,
+    `preparation` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `name`(`name`),
+    UNIQUE INDEX `Recipe_name_key`(`name`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `SavedIngredient` (
-    `userId` INTEGER NOT NULL,
-    `ingredientId` INTEGER NOT NULL,
-
-    INDEX `ingredientId`(`ingredientId`),
-    PRIMARY KEY (`userId`, `ingredientId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` TEXT NOT NULL,
-    `hash` TEXT NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `hash` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `User_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `Dosage` ADD CONSTRAINT `Dosage_ibfk_1` FOREIGN KEY (`recipeId`) REFERENCES `Recipe`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- CreateTable
+CREATE TABLE `_IngredientToUser` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_IngredientToUser_AB_unique`(`A`, `B`),
+    INDEX `_IngredientToUser_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `_RecipeToUser` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_RecipeToUser_AB_unique`(`A`, `B`),
+    INDEX `_RecipeToUser_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Dosage` ADD CONSTRAINT `Dosage_ibfk_2` FOREIGN KEY (`ingredientId`) REFERENCES `Ingredient`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `Dosage` ADD CONSTRAINT `Dosage_recipeId_fkey` FOREIGN KEY (`recipeId`) REFERENCES `Recipe`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Favourite` ADD CONSTRAINT `Favourite_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `Dosage` ADD CONSTRAINT `Dosage_ingredientId_fkey` FOREIGN KEY (`ingredientId`) REFERENCES `Ingredient`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Favourite` ADD CONSTRAINT `Favourite_ibfk_2` FOREIGN KEY (`recipeId`) REFERENCES `Recipe`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `_IngredientToUser` ADD CONSTRAINT `_IngredientToUser_A_fkey` FOREIGN KEY (`A`) REFERENCES `Ingredient`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SavedIngredient` ADD CONSTRAINT `SavedIngredient_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `_IngredientToUser` ADD CONSTRAINT `_IngredientToUser_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SavedIngredient` ADD CONSTRAINT `SavedIngredient_ibfk_2` FOREIGN KEY (`ingredientId`) REFERENCES `Ingredient`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `_RecipeToUser` ADD CONSTRAINT `_RecipeToUser_A_fkey` FOREIGN KEY (`A`) REFERENCES `Recipe`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_RecipeToUser` ADD CONSTRAINT `_RecipeToUser_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
