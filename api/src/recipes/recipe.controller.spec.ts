@@ -79,7 +79,7 @@ describe('RecipeController', () => {
 
   describe('containingIngredient(id)', () => {
     it('should return a recipe when asking for an ingredient', async () => {
-      const res = await recipeController.containingIngredient('0');
+      const res = await recipeController.containingIngredient(0);
       expect(res[0].ingredients.some(({ id }) => id === 0)).toBe(true);
     });
   });

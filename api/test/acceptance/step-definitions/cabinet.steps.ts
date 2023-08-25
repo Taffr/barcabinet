@@ -1,5 +1,5 @@
 import { DataTable, Then, When } from '@cucumber/cucumber';
-import { head, map, isEmpty } from 'ramda';
+import {  map } from 'ramda';
 import { assert } from 'chai';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';

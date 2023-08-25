@@ -1,6 +1,6 @@
 import { DataTable, Given, When, Then } from '@cucumber/cucumber';
 import * as request from 'supertest';
-import { map, chain } from 'ramda';
+import { map } from 'ramda';
 import { expect } from 'chai';
 import { AcceptanceWorld } from '../support/world';
 import { UserStore } from '../../../src/users/user.store';

@@ -39,7 +39,7 @@ describe('resolveCabinet', () => {
       { id: 3, name: 'C' },
     ];
 
-    const inputIngredients = [ 1, 3 ];
+    const inputIngredients = [1, 3];
     const inputRecipes = [
       {
         id: '123',
