@@ -1,6 +1,7 @@
 import { DataTable, Then, When } from '@cucumber/cucumber';
 import { assert } from 'chai';
 import { map } from 'ramda';
+import { Recipe } from '../../../src/recipes/documents/recipe.document';
 import * as request from 'supertest';
 import { AcceptanceWorld } from '../support/world';
 
@@ -15,7 +16,7 @@ Then(
     const expectedFavourites = parsed;
     const resultFavourites = map(
       (r) => ({ id: r.id, name: r.name }),
-      this.response.body,
+      this.response.body as Recipe[],
     );
     assert.deepEqual(resultFavourites, expectedFavourites);
   },

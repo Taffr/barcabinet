@@ -1,4 +1,4 @@
-import { assoc, chain, prop, map, reduce } from 'ramda';
+import { assoc, chain, prop, reduce } from 'ramda';
 import { Recipe } from '../recipes/documents/recipe.document';
 import { Ingredient } from 'src/recipes/interfaces/ingredient.interface';
 

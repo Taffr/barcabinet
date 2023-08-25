@@ -22,10 +22,6 @@ describe('RegisterController', () => {
     },
   };
 
-  const mockCabinetStore = {
-    addForUser: (id: string) => Promise.resolve(id),
-  };
-
   beforeEach(async () => {
     userAddedSpy = undefined;
     const module: TestingModule = await Test.createTestingModule({

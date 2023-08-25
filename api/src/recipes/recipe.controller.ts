@@ -1,8 +1,7 @@
-import { Controller, Inject, Get, Param } from '@nestjs/common';
+import { Controller, Inject, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { IRecipeStore } from './interfaces/recipe.store.interface';
 import { RecipeStore } from './recipe.store';
 import { Ingredient } from './interfaces/ingredient.interface';
-
 @Controller('recipes')
 export class RecipeController {
   constructor(
@@ -16,8 +15,8 @@ export class RecipeController {
   }
 
   @Get('ingredient/:id')
-  async containingIngredient(@Param('id') id: string) {
-    return this.recipeStore.getContainingIngredientId(Number(id));
+  async containingIngredient(@Param('id', ParseIntPipe) id: number) {
+    return this.recipeStore.getContainingIngredientId(id);
   }
 
   @Get('ingredients')
