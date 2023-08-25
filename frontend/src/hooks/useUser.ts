@@ -5,6 +5,7 @@ import { httpClient } from '../common/http/http-client';
 import type { User } from '../interfaces/user.interface';
 import type { UserLoggedInAction } from '../state/userReducer';
 import type { ApplicationState } from '../state/reducer';
+
 export const useUser = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('access_token');
@@ -39,5 +40,6 @@ export const useUser = () => {
     onError,
     retry: false,
   });
+
   return { user, isLoading, isSignedIn: user !== undefined };
 };

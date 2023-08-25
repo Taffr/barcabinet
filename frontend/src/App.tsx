@@ -14,7 +14,7 @@ import { Home } from './components/home';
 import { AllIngredients } from './components/all-ingredients';
 import { AllRecipes } from './components/all-recipes';
 import { RecipeView } from './components/recipe-view';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { ColorModeContext } from './contexts/ColorMode.context';
@@ -56,10 +56,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const [mode, setMode] = useState<'light' | 'dark'>(
-    prefersDark ? 'dark' : 'light',
-  );
+  const storedPreference = localStorage.getItem('themePreference');
+  const prefersDark =
+    storedPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const [mode, setMode] = useState<'light' | 'dark'>(prefersDark ? 'dark' : 'light');
 
   const colorMode = useMemo(
     () => ({
@@ -71,6 +72,10 @@ function App() {
     }),
     [],
   );
+
+  useEffect(() => {
+    localStorage.setItem('themePreference', mode);
+  }, [ mode ]);
 
   const theme = useMemo(() => {
     if (mode === 'dark') {

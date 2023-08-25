@@ -40,9 +40,6 @@ export function Login() {
     const { access_token } = data;
     localStorage.setItem('access_token', access_token);
 
-    httpClient.interceptors.request.use(
-      requestAuthorizationInterceptorFactory(access_token),
-    );
     navigate('/');
   };
 
