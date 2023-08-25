@@ -10,5 +10,3 @@ const httpClient: AxiosInstance = axios.create({
 
 httpClient.interceptors.request.use(requestAuthorization);
 export { httpClient };
-
-

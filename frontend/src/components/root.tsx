@@ -2,6 +2,7 @@ import { Box, Drawer, List, ListItemButton, ListItemText } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import { map } from 'ramda';
 import { ToggleThemeButton } from './ToggleThemeButton';
+import { LogoutButton } from './LogoutButton';
 
 type RouteInfo = { name: string; link: string };
 
@@ -30,6 +31,7 @@ export const Root = () => {
           <List>
             {map(RouterButtonWithDivider, routes)}
             <ToggleThemeButton />
+            <LogoutButton />
           </List>
         </Drawer>
       </Box>

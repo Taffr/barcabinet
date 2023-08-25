@@ -58,9 +58,12 @@ const router = createBrowserRouter([
 function App() {
   const storedPreference = localStorage.getItem('themePreference');
   const prefersDark =
-    storedPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
+    storedPreference === 'dark' ||
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  const [mode, setMode] = useState<'light' | 'dark'>(prefersDark ? 'dark' : 'light');
+  const [mode, setMode] = useState<'light' | 'dark'>(
+    prefersDark ? 'dark' : 'light',
+  );
 
   const colorMode = useMemo(
     () => ({
@@ -75,7 +78,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('themePreference', mode);
-  }, [ mode ]);
+  }, [mode]);
 
   const theme = useMemo(() => {
     if (mode === 'dark') {

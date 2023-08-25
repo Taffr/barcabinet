@@ -5,7 +5,12 @@ export type UserLoggedInAction = {
   payload: User;
 };
 
-export type UserAction = UserLoggedInAction;
+export type UserLoggedOutAction = {
+  type: 'user/userLoggedOut';
+};
+
+export type UserAction = UserLoggedInAction | UserLoggedOutAction;
+
 export const userReducer = (
   state: User | undefined = undefined,
   action: UserAction,
@@ -13,6 +18,8 @@ export const userReducer = (
   switch (action.type) {
     case 'user/userLoggedIn':
       return { ...action.payload };
+    case 'user/userLoggedOut':
+      return undefined;
     default:
       return state;
   }
