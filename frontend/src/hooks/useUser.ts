@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { prop } from 'ramda';
 import { httpClient } from '../common/http/http-client';
 import type { User } from '../interfaces/user.interface';
-import type { UserLoggedInAction } from '../state/userReducer';
+import type { UserLoggedInAction, UserLoggedOutAction } from '../state/userReducer';
 import type { ApplicationState } from '../state/reducer';
 
 export const useUser = () => {
@@ -41,5 +41,11 @@ export const useUser = () => {
     retry: false,
   });
 
-  return { user, isLoading, isSignedIn: user !== undefined };
+  const logout = () => {
+    localStorage.removeItem('access_token');
+    const action: UserLoggedOutAction = { type: 'user/userLoggedOut' }
+    dispatch(action)
+  }
+
+  return { user, isLoading, isSignedIn: user !== undefined, logout };
 };

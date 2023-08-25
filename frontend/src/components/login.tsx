@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { AxiosError, AxiosResponse } from 'axios';
 import { httpClient } from '../common/http/http-client';
-import { requestAuthorizationInterceptorFactory } from '../common/http/request-interceptors';
 import {
   Button,
   LinearProgress,
