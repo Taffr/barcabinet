@@ -11,8 +11,8 @@ export const darkThemeFactory = () =>
         main: '#ba4646',
       },
       background: {
-        default: '#121212',
-        paper: '#121212',
+        default: '#242526',
+        paper: '#242526',
       },
       info: {
         main: '#3d5f76',
