@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { isEmpty, mergeLeft } from 'ramda';
 import { httpClient } from '../common/http/http-client';
-import { requestAuthorizationInterceptorFactory } from '../common/http/request-interceptors';
 
 const ERRORS = {
   CONFLICT: 409,
@@ -55,9 +54,6 @@ export function Register() {
         const { access_token } = data;
         localStorage.setItem('access_token', access_token);
 
-        httpClient.interceptors.request.use(
-          requestAuthorizationInterceptorFactory(access_token),
-        );
         navigate('/');
       });
   };
